@@ -9,6 +9,12 @@ class User
         $this->db = new Database;
     }
 
+    public function getUsers()
+    {
+        $this->db->query('SELECT * FROM users');
+        return $this->db->resultSet();
+    }
+
     public function findUserByEmail($email)
     {
         $this->db->query('SELECT * FROM users WHERE email = :email');

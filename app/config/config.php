@@ -1,9 +1,9 @@
 <?php
 
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', 'mvc');
+    define('DB_HOST', 'nader-mo.tech');
+    define('DB_USER', 'php');
+    define('DB_PASS', 'Aa12345678');
+    define('DB_NAME', 'php');
 
     define('APPROOT', dirname(dirname(__FILE__)));
 

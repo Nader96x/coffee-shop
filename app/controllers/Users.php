@@ -4,11 +4,16 @@ class Users extends Controller
 {
     public function __construct()
     {
-        if(isLoggedIn())
-        {
-            redirect('home');
-        }
+//        if(isLoggedIn())
+//        {
+//            redirect('home');
+//        }
         $this->userModel = $this->model('User');
+    }
+
+    public function cccc(){
+        $data =  $this->userModel->getUsers();
+        return $this->view('users/index', $data);
     }
 
     public function register()

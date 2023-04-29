@@ -71,4 +71,51 @@ class Products extends Controller
             }
         }
     }
+
+    public function update($id)
+    {
+        $request_data = $errors = [
+            'name' => '',
+            'price' => '',
+            'avatar' => '',
+            'status' => '',
+            'cat_id' => '',
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // update request data
+            $request_data = array_merge($request_data, $_POST);
+            $request_data['avatar'] = $_FILES['avatar']['name'];
+            $errs = $this->productModel->updateProduct($request_data);
+            if (is_array($errs)) {
+                $errors = array_merge($errors, $errs);
+            } else {
+                if ($errs === true) {
+                    flash('product_update', 'Product Updated', 'success');
+                    return redirect('products');
+                } else {
+                    flash('product_update', 'Something went wrong', 'danger');
+                }
+            }
+        }
+        $data = [
+            'errors' => $errors,
+            'data' => $request_data,
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $data = [
+                'errors' => [
+                    'name' => '',
+                    'price' => '',
+                    'avatar' => '',
+                    'status' => '',
+                    'cat_id' => '',
+                ],
+                'data' => []
+            ];
+            $data['data'] = $this->productModel->getProductById($id);
+        }
+        return $this->view('products/update', $data);
+    }
 }

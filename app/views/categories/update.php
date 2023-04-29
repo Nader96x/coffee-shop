@@ -1,7 +1,6 @@
 <?php require APPROOT . '/views/inc/header.php';
 $errors = $data['errors'];
 $data = (object)$data['data'];
-
 ?>
 <div class="row">
     <div class="col-md-6 mx-auto">

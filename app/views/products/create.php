@@ -2,9 +2,7 @@
 <?php
 $errors = $data['errors'];
 $data = $data['data'];
-var_dump($data);
 require_once('../app/models/Category.php');
-
 $categories = new Category;
 $cats = $categories->getCategories();
 ?>

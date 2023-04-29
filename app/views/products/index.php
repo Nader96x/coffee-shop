@@ -45,7 +45,7 @@ $category = new Category;
                             <td><?= $cat->name ?></td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="products/update/<?php echo $product->id ?>" class="btn btn-success">Update</a>
+                                    <a href="<?= URLROOT ?>/products/update/<?= $product->id ?>" class="btn btn-success">Update</a>
                                     <form method="post" action="<?= URLROOT ?>/products/delete" onsubmit="return confirm('Are you sure you want to delete this Product?')">
                                         <input type="hidden" name="id" value="<?php echo $product->id; ?>">
                                         <button type="submit" class="btn btn-danger">Delete</button>

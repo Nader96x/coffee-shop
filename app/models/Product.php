@@ -56,28 +56,41 @@ class Product extends Model
     public function updateProduct($data)
     {
         $errors = $this->validateUpdate($data);
-        if (!empty($errors)) {
+        if (!empty($_FILES['avatar']['name']) && $_FILES['avatar']['size'] > 0) {
+            $image_data = $this->prepareImage();
+            $errors = array_merge($errors, $image_data[0]);
+            $data = array_merge($data, $image_data[1]);
+        }
+
+        if (count($errors) > 0) {
             return $errors;
         }
-        $this->db->query('UPDATE product SET name = :name, price = :price, image = :image, status = :status, cat_id = :cat_id WHERE id = :id');
-        $this->db->bind(':id', $data['id']);
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':price', $data['price']);
-        $this->db->bind(':image', $data['image']);
-        $this->db->bind(':status', $data['status']);
-        $this->db->bind(':cat_id', $data['cat_id']);
-        if ($this->db->execute()) {
+        $product = $this->find($data['id']);
+        $this->db->query('UPDATE product SET name = :name, price = :price, status = :status, avatar = :avatar, cat_id = :cat_id WHERE id = :id');
+        $this->db->bind(':id', $product->id);
+        $this->db->bind(':name', in_array('name', array_keys($data)) ? $data['name'] : $product->name);
+        $this->db->bind(':price', in_array('price', array_keys($data)) ? $data['price'] : $product->price);
+        $this->db->bind(':status', in_array('status', array_keys($data)) ? $data['status'] : $product->status);
+        $this->db->bind(':cat_id', in_array('cat_id', array_keys($data)) ? $data['cat_id'] : $product->cat_id);
+        $this->db->bind(':avatar', in_array('avatar', array_keys($data)) ? $data['avatar'] : $product->avatar);
+
+        $result = $this->db->execute();
+        if ($result) {
+            if ($product->avatar != URLROOT . '/uploads/default.png' && in_array('avatar', array_keys($data))) {
+                unlink($product->avatar);
+            }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function deleteProduct($id): bool
     {
+        $product = $this->getProductById($id);
         $this->db->query('DELETE FROM product WHERE id = :id');
         $this->db->bind(':id', $id);
         if ($this->db->execute()) {
+            unlink($product->avatar);
             return true;
         } else {
             return false;
@@ -148,16 +161,16 @@ class Product extends Model
         if (empty($data['price'])) {
             $errors['price'] = 'Price is required';
         } else {
-            if (!is_float($data['price'])) {
+            if (!is_numeric($data['price'])) {
                 $errors['price'] = 'Price must be a number';
             } elseif ($data['price'] < 0) {
                 $errors['price'] = 'Price must be a positive number';
             }
         }
-        if (empty($data['image'])) {
-            $errors['image'] = 'Image is required';
+        if (empty($data['avatar'])) {
+            $errors['avatar'] = 'Image is required';
         }
-        if (empty($data['status'])) {
+        if (empty($data['status']) && $data['status'] != 0) {
             $errors['status'] = 'status is required';
         }
         if (empty($data['cat_id'])) {

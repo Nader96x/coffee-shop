@@ -2,7 +2,6 @@
 <?php
 $errors = $data['errors'];
 $data = $data['data'];
-var_dump($data);
 ?>
 
 <section class="content mt-5">

@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?php echo SITENAME; ?></title>
-    <link rel="shortcut icon" href="<?php echo URLROOT; ?>/assets/images/logo/favicon.ico" type="images/x-icon" />
+    <link rel="shortcut icon" href="<?php echo URLROOT; ?>/assets/images/logo/favicon.ico" type="images/x-icon"/>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/lightcase.css">
@@ -16,7 +16,14 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/animate.min.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/jquery-ui.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/main.css">
+    <style>
+        input[type=number].disable_count::-webkit-inner-spin-button,
+        input[type=number].disable_count::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
+    </style>
 </head>
 
 <body class="dark-bg">
@@ -67,7 +74,8 @@
 <!-- preloader end -->
 
 <!-- header start -->
-<header class="site-header site-header__3 position-absolute">
+<!--<header class="site-header site-header__3 position-absolute">-->
+<header class="site-header site-header__3">
     <div class="menu-area menu-area__3">
         <div class="container-fluid custom-width custom-width__2">
             <div class="row d-none d-xl-flex">
@@ -130,7 +138,8 @@
                                     <span class="close"><i class="fal fa-times"></i></span>
                                 </div>
                                 <div class="search__form">
-                                    <form role="search" method="get" action="https://xpressrow.com/html/cafena/cafena/index.html">
+                                    <form role="search" method="get"
+                                          action="https://xpressrow.com/html/cafena/cafena/index.html">
                                         <input type="search" name="s" value="" placeholder="Search Keywords">
                                         <button type="submit"><i class="far fa-search"></i></button>
                                     </form>
@@ -200,7 +209,8 @@
                                 <span class="close"><i class="fal fa-times"></i></span>
                             </div>
                             <div class="search__form">
-                                <form role="search" method="get" action="https://xpressrow.com/html/cafena/cafena/index.html">
+                                <form role="search" method="get"
+                                      action="https://xpressrow.com/html/cafena/cafena/index.html">
                                     <input type="search" name="s" value="" placeholder="Search Keywords">
                                     <button type="submit"><i class="far fa-search"></i></button>
                                 </form>
@@ -250,7 +260,9 @@
             <div class="side-info">
                 <div class="side-info__content mb-35">
                     <h4 class="title mb-5">About us</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud  nisi ut aliquip ex ea commodo consequat.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud nisi ut aliquip ex ea
+                        commodo consequat.</p>
                     <a class="site-btn mt-20" href="contact.html">Contact us</a>
                 </div>
                 <div class="contact__info--wrapper mt-15">
@@ -296,7 +308,8 @@
     <div class="side-info">
         <div class="side-info__content mb-35">
             <h4 class="title mb-5">About us</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud  nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud nisi ut aliquip ex ea commodo consequat.</p>
             <a class="site-btn mt-20" href="contact.html">Contact us</a>
         </div>
         <div class="contact__info--wrapper mt-15">
@@ -328,7 +341,8 @@
 <!-- cart list -->
 <aside class="cart-bar-wrapper">
     <div class="cart-bar__close">
-        <a class="d-flex align-items-center justify-content-center" href="javascript:void(0);"><i class="fal fa-times"></i></a>
+        <a class="d-flex align-items-center justify-content-center" href="javascript:void(0);"><i
+                class="fal fa-times"></i></a>
     </div>
     <div class="cart-bar">
         <h4 class="cart-bar__title">Cart Items - <span>4</span></h4>
@@ -394,4 +408,4 @@
 </aside>
 <div class="overlay"></div>
 
-<main>
+<main class="container">

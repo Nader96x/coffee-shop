@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9ede387-7931-45d9-bb90-a1f2d95ca31c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/controllers/Orders.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/orders/index.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/inc/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/inc/header.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,9 +63,9 @@
     "RunOnceActivity.laravel-idea.search-composer-json": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "users",
+    "git-widget-placeholder": "orders",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/xampp/htdocs/cafe/app/views/users",
+    "last_opened_file_path": "C:/xampp/htdocs/cafe/app/views/orders",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -82,11 +83,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\cafe\app\views\orders" />
+      <recent name="C:\xampp\htdocs\cafe\public\uploads" />
       <recent name="C:\xampp\htdocs\cafe\app\views\users" />
       <recent name="C:\xampp\htdocs\MVC\public" />
       <recent name="C:\xampp\htdocs\MVC\app\views\users" />
-      <recent name="C:\xampp\htdocs\MVC" />
-      <recent name="C:\xampp\htdocs\MVC\app\views\pages" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\MVC\app\views\pages" />
@@ -121,7 +122,7 @@
       <workItem from="1682716894059" duration="5454000" />
       <workItem from="1682768255441" duration="132000" />
       <workItem from="1682768455345" duration="2806000" />
-      <workItem from="1682779660384" duration="15378000" />
+      <workItem from="1682779660384" duration="22980000" />
     </task>
     <servers />
   </component>

@@ -8,6 +8,80 @@ class User extends Model
         return $this->db->resultSet();
     }
 
+    public function addUser($data)
+    {
+
+        $errors = $this->validateCreation($data);
+        $image_data = $this->prepareImage();
+        $errors = array_merge($errors, $image_data[0]);
+        $data = array_merge($data, $image_data[1]);
+//        die(print_r($errors) . print_r($data));
+        if (count($errors) > 0) {
+//            die(print_r($errors));
+            return $errors;
+        }
+        $this->db->query('INSERT INTO users (name, email, pass,avatar,role) VALUES (:name, :email, :password,:avatar,:role)');
+        $this->db->bind(':name', $data['name']);
+        $this->db->bind(':email', $data['email']);
+        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+        $this->db->bind(':avatar', $data['avatar']);
+        $this->db->bind(':role', in_array('role', $data) ? $data['role'] : 'User');
+        return $this->db->execute();
+    }
+
+    private function validateCreation($data): array
+    {
+        $errors = [];
+        if (empty($data['name'])) {
+            $errors['name'] = 'Please enter name';
+        } else {
+            if (strlen($data['name']) < 3) {
+                $errors['name'] = 'Name must be at least 3 characters';
+            }
+        }
+        if (empty($data['email'])) {
+            $errors['email'] = 'Please enter email';
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Please enter the correct email format';
+        } else {
+            if ($this->findUserByEmail($data['email'])) {
+                $errors['email'] = 'Email is already taken';
+            }
+        }
+        if (empty($data['password'])) {
+            $errors['password'] = 'Please enter password';
+        } else {
+            if (strlen($data['password']) < 6) {
+                $errors['password'] = 'Password must be at least 6 characters';
+            } elseif (!preg_match("#[0-9]+#", $data['password'])) {
+                $errors['password'] = 'Password must contain at least 1 number';
+            } elseif (!preg_match("#[A-Z]+#", $data['password'])) {
+                $errors['password'] = 'Password must contain at least 1 capital letter';
+            } elseif (!preg_match("#[a-z]+#", $data['password'])) {
+                $errors['password'] = 'Password must contain at least 1 lowercase letter';
+            }
+        }
+        if (empty($data['confirm_password'])) {
+            $errors['confirm_password'] = 'Please confirm password';
+        } else {
+            if ($data['password'] != $data['confirm_password']) {
+                $errors['confirm_password'] = 'Passwords do not match';
+            }
+        }
+
+        if (empty($data['avatar'])) {
+            $errors['avatar'] = 'Please enter avatar';
+        }
+
+        if (!empty($data['role'])) {
+            if ($data['role'] != 'Admin' && $data['role'] != 'User') {
+                $errors['role'] = 'Role must be admin or user';
+            }
+        }
+//        die(print_r($errors) . print_r($data));
+        return $errors;
+    }
+
     public function findUserByEmail($email)
     {
         $this->db->query('SELECT * FROM users WHERE email = :email');
@@ -20,19 +94,29 @@ class User extends Model
         }
     }
 
-    public function addUser($data)
+    private function prepareImage()
     {
-        $errors =$this->validateCreation($data);
-        if (count($errors) > 0) {
-            return $errors;
+        $errors = [];
+        $data = [];
+        if (empty($_FILES['avatar']['name']) || $_FILES['avatar']['size'] == 0)
+            $errors['avatar'] = "photo is required";
+        else {
+
+            $allowedTypes = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
+            if (!in_array($_FILES['avatar']['type'], $allowedTypes))
+                $errors['avatar'] = "photo is required and must be png, jpg, gif or jpeg";
+            else {
+                $photo = $_FILES['avatar']['name'];
+                $tmp = $_FILES['avatar']['tmp_name'];
+                if (!is_dir("uploads"))
+                    mkdir("uploads");
+                $photo = "uploads/" . uniqid() . "_" . $photo;
+                move_uploaded_file($tmp, $photo);
+                $data['avatar'] = URLROOT . '/' . $photo;
+            }
         }
-        $this->db->query('INSERT INTO users (name, email, pass,avatar,role) VALUES (:name, :email, :password,:avatar,:role)');
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':email', $data['email']);
-        $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
-        $this->db->bind(':avatar', $data['avatar']);
-        $this->db->bind(':role', $data['role']);
-        return $this->db->execute();
+
+        return [$errors, $data];
     }
 
     public function login($email, $password)
@@ -47,13 +131,6 @@ class User extends Model
         } else {
             return false;
         }
-    }
-
-    public function find($id)
-    {
-        $this->db->query('SELECT * FROM users WHERE id = :id');
-        $this->db->bind(':id', $id);
-        return $this->db->single();
     }
 
     public function getUserByID($id)
@@ -81,80 +158,17 @@ class User extends Model
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':name', $data['name'] || $user->name);
         $this->db->bind(':email', $data['email'] || $user->email);
-        $this->db->bind(':password', $data['password']?password_hash($data['password'], PASSWORD_DEFAULT):$user->password);
+        $this->db->bind(':password', $data['password'] ? password_hash($data['password'], PASSWORD_DEFAULT) : $user->password);
         $this->db->bind(':avatar', $data['avatar'] || $user->avatar);
-        $this->db->bind(':role', $data['role']|| $user->role);
+        $this->db->bind(':role', $data['role'] || $user->role);
         return $this->db->execute();
     }
 
-
-    public function getUserByRole($role)
+    private function validateUpdate($data)
     {
-        $this->db->query('SELECT * FROM users WHERE role = :role');
-        $this->db->bind(':role', $role);
-        return $this->db->resultSet();
-    }
-
-
-    private function validateCreation($data): array
-    {
-        $errors = [];
-        if (empty($data['name'])) {
-            $errors['name'] = 'Please enter name';
-        }else{
-            if(strlen($data['name']) < 3){
-                $errors['name'] = 'Name must be at least 3 characters';
-            }
-        }
-        if (empty($data['email'])) {
-            $errors['email'] = 'Please enter email';
-        }elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = 'Please enter the correct email format';
-        } else {
-            if ($this->findUserByEmail($data['email'])) {
-                $errors['email'] = 'Email is already taken';
-            }
-        }
-        if (empty($data['password'])) {
-            $errors['password'] = 'Please enter password';
-        } else {
-            if (strlen($data['password']) < 6) {
-                $errors['password'] = 'Password must be at least 6 characters';
-            }elseif (!preg_match("#[0-9]+#", $data['password'])) {
-                $errors['password'] = 'Password must contain at least 1 number';
-            }elseif (!preg_match("#[A-Z]+#", $data['password'])) {
-                $errors['password'] = 'Password must contain at least 1 capital letter';
-            }elseif (!preg_match("#[a-z]+#", $data['password'])) {
-                $errors['password'] = 'Password must contain at least 1 lowercase letter';
-            }
-        }
-        if (empty($data['confirm_password'])) {
-            $errors['confirm_password'] = 'Please confirm password';
-        } else {
-            if ($data['password'] != $data['confirm_password']) {
-                $errors['confirm_password'] = 'Passwords do not match';
-            }
-        }
-
-        if (empty($data['avatar'])) {
-            $errors['avatar'] = 'Please enter avatar';
-        }
-
-        if (empty($data['role'])) {
-            $errors['role'] = 'Please enter role';
-        }else{
-            if($data['role'] != 'Admin' && $data['role'] != 'User'){
-                $errors['role'] = 'Role must be admin or user';
-            }
-        }
-
-        return $errors;
-    }
-
-    private function validateUpdate($data){
         $errors = [];
         if (!empty($data['name'])) {
-            if(strlen($data['name']) < 3){
+            if (strlen($data['name']) < 3) {
                 $errors['name'] = 'Name must be at least 3 characters';
             }
         }
@@ -170,11 +184,11 @@ class User extends Model
         if (!empty($data['password'])) {
             if (strlen($data['password']) < 6) {
                 $errors['password'] = 'Password must be at least 6 characters';
-            }elseif (!preg_match("#[0-9]+#", $data['password'])) {
+            } elseif (!preg_match("#[0-9]+#", $data['password'])) {
                 $errors['password'] = 'Password must contain at least 1 number';
-            }elseif (!preg_match("#[A-Z]+#", $data['password'])) {
+            } elseif (!preg_match("#[A-Z]+#", $data['password'])) {
                 $errors['password'] = 'Password must contain at least 1 capital letter';
-            }elseif (!preg_match("#[a-z]+#", $data['password'])) {
+            } elseif (!preg_match("#[a-z]+#", $data['password'])) {
                 $errors['password'] = 'Password must contain at least 1 lowercase letter';
             }
         }
@@ -185,13 +199,25 @@ class User extends Model
         }
 
         if (!empty($data['role'])) {
-            if($data['role'] != 'Admin' && $data['role'] != 'User'){
+            if ($data['role'] != 'Admin' && $data['role'] != 'User') {
                 $errors['role'] = 'Role must be admin or user';
             }
         }
-
-
         return $errors;
+    }
+
+    public function find($id)
+    {
+        $this->db->query('SELECT * FROM users WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    public function getUsersByRole($role)
+    {
+        $this->db->query('SELECT * FROM users WHERE role = :role');
+        $this->db->bind(':role', $role);
+        return $this->db->resultSet();
     }
 
 

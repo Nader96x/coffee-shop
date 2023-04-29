@@ -2,6 +2,7 @@
 <?php
 $products = $data['products'];
 $user_last_orders = $data['user_last_orders'];
+$users = $data['users'];
 ?>
     <div class="row bg-light p-3">
         <?php flash('user_message');
@@ -27,15 +28,29 @@ $user_last_orders = $data['user_last_orders'];
                         <option value="3">Room 3</option>
                     </select>
                 </div>
-                <div class="col-12">
-                    <h4>Total: <span id="total" class="text-success">0</span></h4>
+                <hr class="my-2 ">
+                <div class="col-12 alert alert-primary">
+                    <h4>Total: <span id="total" class="text-success">0</span> L.E</h4>
+                </div>
+                <div class="col-12 my-3">
+                    <button class="btn btn-success w-100" onclick="order(event)">Order</button>
                 </div>
             </div>
 
 
         </div>
         <div class="col-12 col-md-8">
-            <h4>Latest Orders</h4>
+            <?php if (count($users) > 0) { ?>
+                <h4 class="mt-3">add order to User</h4>
+                <div class="row">
+                    <select name="user_id">
+                        <?php foreach ($users as $user) { ?>
+                            <option value="<?= $user->id ?>"><?= $user->name ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            <?php } ?>
+            <h4 class="mt-3">Latest Orders</h4>
             <div class="row">
                 <?php foreach ($user_last_orders as $prod) { ?>
                     <div class="col-6 col-md-3 col-lg-2 my-2 product">
@@ -45,8 +60,6 @@ $user_last_orders = $data['user_last_orders'];
                              data-name="<?= $prod->name ?>"/>
                     </div>
                 <?php } ?>
-
-
             </div>
             <hr>
             <h4>All Products</h4>
@@ -67,10 +80,12 @@ $user_last_orders = $data['user_last_orders'];
 
     </div>
     <script>
+        let products = [];
+
         function closeButton(products) {
             document.querySelectorAll(".btn-danger.remove").forEach(el => {
                 el.addEventListener('click', function (event) {
-                    let id = event.target.parentElement.dataset.id;
+                    let id = event.target.dataset.id;
                     let index = products.findIndex(p => p.id === id);
                     products.splice(index, 1);
                     drawProducts(products);
@@ -89,7 +104,7 @@ $user_last_orders = $data['user_last_orders'];
             });
             document.querySelectorAll(".prod-decrease").forEach(el => {
                 el.addEventListener('click', (event) => {
-                    console.log(event.target.parentElement.dataset.id)
+                    // console.log(event.target.parentElement.dataset.id)
                     let id = event.target.parentElement.dataset.id;
                     let index = products.findIndex(p => p.id === id);
                     if (products[index].qty > 1) {
@@ -97,7 +112,7 @@ $user_last_orders = $data['user_last_orders'];
                     } else {
                         products.splice(index, 1);
                     }
-                    console.log(products);
+                    // console.log(products);
                     drawProducts(products);
 
                 })
@@ -105,6 +120,7 @@ $user_last_orders = $data['user_last_orders'];
         }
 
         function drawProducts(products) {
+            // console.log(products);
             let orders = document.getElementById('orders');
             let total = document.getElementById('total');
             let totalAmount = 0;
@@ -113,14 +129,14 @@ $user_last_orders = $data['user_last_orders'];
             products.forEach(p => {
                 html += `<div class="row text-center">
                             <div class="col-3 text-start">${p.name}</div>
-                            <div class="col-2">${p.qty}</div>
+                            <div class="col-2 px-0 mx-0">${p.qty} x${p.price}</div>
 
                             <div class="col-2 p-0 " data-id="${p.id}" data-price="${p.price}" data-name="${p.name}" >
                                 <button class="w-25 p-0 text-center btn btn-outline-primary prod-increase">+</button>
                                 <button class="w-25 p-0 text-center btn btn-outline-secondary prod-decrease">-</button>
                             </div>
-                            <div class="col-3">${p.price * p.qty} L.E</div>
-                            <div class="col-2"><button class="btn btn-danger remove">X</button></div>
+                            <div class="col-3 mx-0 px-0">${p.price * p.qty} L.E</div>
+                            <div class="col-2"><button class="btn btn-danger remove" data-id="${p.id}" >X</button></div>
 
                             <div class="col-12"><hr></div>
                         </div>`;
@@ -134,7 +150,6 @@ $user_last_orders = $data['user_last_orders'];
         }
 
         window.addEventListener('load', function () {
-            let products = [];
 
             document.querySelectorAll(".product").forEach(el => {
                 el.addEventListener('click', function (event) {
@@ -163,6 +178,36 @@ $user_last_orders = $data['user_last_orders'];
                 })
             });
         })
+
+        function order(event) {
+            let notes = document.querySelector("textarea[name='notes']").value;
+            let room = document.querySelector("select[name='room']").value;
+            let total = document.querySelector("#total").innerHTML;
+            let data = {
+                notes: notes,
+                room: room,
+                total: total,
+                products: products
+            };
+            console.log(data);
+            fetch('<?= URLROOT ?>/orders/add', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(res => res.json())
+                .then(res => {
+                    console.log("lolll!");
+                    console.log(res);
+                    if (res.status === 'success') {
+                        alert('Order Added Successfully');
+                        window.location.href = '<?= URLROOT ?>/orders';
+                    } else {
+                        alert('Error');
+                    }
+                })
+        }
     </script>
 
 <?php require APPROOT . '/views/inc/footer.php'; ?>

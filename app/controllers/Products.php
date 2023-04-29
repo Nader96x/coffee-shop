@@ -3,7 +3,6 @@
 class Products extends Controller
 {
     public $productModel;
-
     public function __construct()
     {
         //        if(isLoggedIn())
@@ -21,62 +20,55 @@ class Products extends Controller
 
     public function create()
     {
+        $request_data = $errors = [
+            'name' => '',
+            'price' => '',
+            'avatar' => 'default.jpg',
+            'status' => '',
+            'cat_id' => '',
+        ];
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $data = [
-                'name'        =>    trim($_POST['name']),
-                'price'        =>    trim($_POST['price']),
-                'image'    =>    trim($_POST['image']),
-                'status'    =>    trim($_POST['status']),
-                'cat_id'    =>    trim($_POST['cat_id']),
-                'name_error'        =>    '',
-                'price_error'        =>    '',
-                'image_error'    =>    '',
-                'status_error' => '',
-                'cat_id_error' => ''
-            ];
-
-            if (empty($data['price'])) {
-                $data['price_error'] = 'Please enter Product price';
+            // update request data
+            $request_data = array_merge($request_data, $_POST);
+            $request_data['avatar'] = $_FILES['avatar']['name'];
+            $errs = $this->productModel->addProduct($request_data);
+            if (is_array($errs)) {
+                $errors = array_merge($errors, $errs);
             } else {
-                if ($this->productModel->findUserByEmail($data['email'])) {
-                    $data['price_error'] = 'Email is already taken';
-                }
-            }
-
-            if (empty($data['name'])) {
-                $data['name_error'] = 'Please enter a name';
-            }
-
-            if (empty($data['password'])) {
-                $data['price_error'] = 'Please enter a password';
-            } elseif (strlen($data['password']) < 6) {
-                $data['price_error'] = 'Password must be at least 6 characters';
-            }
-
-
-            if (empty($data['email_err']) && empty($data['name_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
-                if ($this->productModel->register($data)) {
-                    flash('register_success', 'You are registered and can log in');
-                    redirect('products/login');
+                if ($errs === true) {
+                    flash('product_message', 'Product added', 'success');
+                    return redirect('products/index');
                 } else {
-                    die('Something went wrong');
+                    flash('product_message', 'Something went wrong', 'danger');
                 }
-            } else {
-                $this->view('products/register', $data);
             }
-        } else {
-            $data = [
-                'name'        =>    '',
-                'email'        =>    '',
-                'password'    =>    '',
-                'confirm_password'    =>    '',
-                'name_error'        =>    '',
-                'email_error'        =>    '',
-                'password_error'    =>    '',
-                'confirm_password_err' => ''
-            ];
+        }
 
-            $this->view('products/register', $data);
+        $data = [
+            'errors' => $errors,
+            'data' => $request_data,
+        ];
+
+        return $this->view('products/create', $data);
+    }
+
+    public function delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $product = $this->productModel->find($_POST['id']);
+            if ($product) {
+                $data =  $this->productModel->deleteProduct($_POST['id']);
+                if ($data) {
+                    flash('product_message', 'Product Deleted', 'success');
+                } else {
+                    flash('product_message', 'Something went wrong', 'danger');
+                }
+                return redirect('products');
+            } else {
+                flash('product_message', 'Products Not Found', 'danger');
+                return redirect('products');
+            }
         }
     }
 }

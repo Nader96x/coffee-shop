@@ -24,7 +24,7 @@ class Category extends Model
     public function addCategory($data)
     {
         $errors = $this->validateCreate($data);
-        if (!empty($errors)) {
+        if (count($errors) > 0) {
             return $errors;
         }
         $this->db->query('INSERT INTO category (name) VALUES (:name)');
@@ -42,9 +42,11 @@ class Category extends Model
         if (!empty($errors)) {
             return $errors;
         }
+        $category = $this->find($data['id']);
         $this->db->query('UPDATE category SET name = :name WHERE id = :id');
-        $this->db->bind(':id', $data['id']);
-        $this->db->bind(':name', $data['name']);
+        $this->db->bind(':id', $category->id);
+        $this->db->bind(':name', in_array('name', array_keys($data)) ? $data['name'] : $category->name);
+
         if ($this->db->execute()) {
             return true;
         } else {

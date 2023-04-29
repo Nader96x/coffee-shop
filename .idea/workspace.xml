@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9ede387-7931-45d9-bb90-a1f2d95ca31c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/views/users/create.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/users/edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/Users.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/Users.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/prepareRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/helpers/prepareRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/users/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/users/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +47,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe" />
   <component name="ProjectId" id="2NpuMJWDwRxJW7VGBvI34STCVXw" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -122,7 +121,7 @@
       <workItem from="1682716894059" duration="5454000" />
       <workItem from="1682768255441" duration="132000" />
       <workItem from="1682768455345" duration="2806000" />
-      <workItem from="1682779660384" duration="10570000" />
+      <workItem from="1682779660384" duration="10919000" />
     </task>
     <servers />
   </component>
@@ -139,21 +138,6 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php-line-method">
-          <url>file://$PROJECT_DIR$/app/controllers/Users.php</url>
-          <line>6</line>
-          <properties>
-            <option name="className" value="\Users" />
-            <option name="methodName" value="__construct" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -29,17 +29,13 @@ class User
 
     public function register($data)
     {
-        $this->db->query('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
+        $this->db->query('INSERT INTO users (name, email, pass,avatar,role) VALUES (:name, :email, :password,:avatar,:role)');
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+        $this->db->bind(':avatar', $data['avatar']);
+        $this->db->bind(':role', $data['role']);
         return $this->db->execute();
-        die();
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function login($email, $password)
@@ -56,4 +52,38 @@ class User
         }
     }
 
+    public function find($id)
+    {
+        $this->db->query('SELECT * FROM users WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    public function deleteUserById($id)
+    {
+        $this->db->query('DELETE FROM users WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
+
+    public function updateUser($data)
+    {
+        $user = $this->find($data['id']);
+        $this->db->query('UPDATE users SET name = :name, email = :email, pass = :password, avatar = :avatar, role = :role WHERE id = :id');
+        $this->db->bind(':id', $data['id']);
+        $this->db->bind(':name', $data['name'] || $user->name);
+        $this->db->bind(':email', $data['email'] || $user->email);
+        $this->db->bind(':password', $data['password'] ? password_hash($data['password'], PASSWORD_DEFAULT) : $user->password);
+        $this->db->bind(':avatar', $data['avatar'] || $user->avatar);
+        $this->db->bind(':role', $data['role'] || $user->role);
+        return $this->db->execute();
+    }
+
+
+    public function getUserByRole($role)
+    {
+        $this->db->query('SELECT * FROM users WHERE role = :role');
+        $this->db->bind(':role', $role);
+        return $this->db->resultSet();
+    }
 }

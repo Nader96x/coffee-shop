@@ -15,8 +15,7 @@ class Users extends Controller
 
     public function cccc()
     {
-        $data =  $this->userModel->getUsers();
-        $data = [];
+        $data = $this->userModel->getUsers();
         return $this->view('users/index', $data);
     }
 
@@ -24,13 +23,13 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
-                'name'        =>    trim($_POST['name']),
-                'email'        =>    trim($_POST['email']),
-                'password'    =>    trim($_POST['password']),
-                'confirm_password'    =>    trim($_POST['confirm_password']),
-                'name_error'        =>    '',
-                'email_error'        =>    '',
-                'password_error'    =>    '',
+                'name' => trim($_POST['name']),
+                'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']),
+                'confirm_password' => trim($_POST['confirm_password']),
+                'name_error' => '',
+                'email_error' => '',
+                'password_error' => '',
                 'confirm_password_err' => ''
             ];
 
@@ -72,13 +71,13 @@ class Users extends Controller
             }
         } else {
             $data = [
-                'name'        =>    '',
-                'email'        =>    '',
-                'password'    =>    '',
-                'confirm_password'    =>    '',
-                'name_error'        =>    '',
-                'email_error'        =>    '',
-                'password_error'    =>    '',
+                'name' => '',
+                'email' => '',
+                'password' => '',
+                'confirm_password' => '',
+                'name_error' => '',
+                'email_error' => '',
+                'password_error' => '',
                 'confirm_password_err' => ''
             ];
 
@@ -91,10 +90,10 @@ class Users extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $data = [
-                'email'        =>    trim($_POST['email']),
-                'password'    =>    trim($_POST['password']),
-                'email_error'        =>    '',
-                'password_error'    =>    '',
+                'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']),
+                'email_error' => '',
+                'password_error' => '',
             ];
 
             if (empty($data['email'])) {
@@ -120,10 +119,10 @@ class Users extends Controller
             }
         } else {
             $data = [
-                'email'        =>    '',
-                'password'    =>    '',
-                'email_error'        =>    '',
-                'password_error'    =>    ''
+                'email' => '',
+                'password' => '',
+                'email_error' => '',
+                'password_error' => ''
 
             ];
 
@@ -134,5 +133,70 @@ class Users extends Controller
     public function logout()
     {
         logoutSession();
+    }
+
+    public function index()
+    {
+        $data = $this->userModel->getUsersByRole("User");
+        return $this->view('users/index', $data);
+    }
+
+    public function indexAdmin()
+    {
+        $data = $this->userModel->getUsersByRole("Admin");
+        return $this->view('users/indexAdmin', $data);
+    }
+
+    public function create()
+    {
+        $request_data = $errors = [
+            'name' => '',
+            'email' => '',
+            'password' => '',
+            'confirm_password' => '',
+            'avatar' => '',
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // update request data
+            $request_data = array_merge($request_data, $_POST);
+            $request_data['avatar'] = $_FILES['avatar']['name'];
+            $errs = $this->userModel->addUser($request_data);
+            if (is_array($errs)) {
+                $errors = array_merge($errors, $errs);
+            } else {
+                if ($errs === true) {
+                    flash('user_message', 'User added', 'success');
+                    return redirect('users/index');
+                } else {
+                    flash('user_message', 'Something went wrong', 'danger');
+                }
+            }
+
+
+        }
+
+        $data = [
+            'errors' => $errors,
+            'data' => $request_data,
+        ];
+
+        return $this->view('users/create', $data);
+
+    }
+
+    public function edit($id)
+    {
+        $data = $this->userModel->getUserById($id);
+        return $this->view('users/edit', $data);
+    }
+
+
+    public function delete($id)
+    {
+        $data = $this->userModel->deleteUserById($id);
+        flash('user_message', 'User deleted', 'success');
+        header("Location: " . URLROOT . "/users/index");
+//        return $this->view('users/index', $data);
     }
 }

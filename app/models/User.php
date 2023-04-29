@@ -25,7 +25,7 @@ class User extends Model
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':password', password_hash($data['password'], PASSWORD_DEFAULT));
         $this->db->bind(':avatar', $data['avatar']);
-        $this->db->bind(':role', in_array('role', $data) ? $data['role'] : 'User');
+        $this->db->bind(':role', in_array('role', array_keys($data)) ? $data['role'] : 'User');
         return $this->db->execute();
     }
 
@@ -99,7 +99,7 @@ class User extends Model
         $errors = [];
         $data = [];
         if (empty($_FILES['avatar']['name']) || $_FILES['avatar']['size'] == 0)
-            $errors['avatar'] = "photo is required";
+            $errors['avatar'] = "photo is required.";
         else {
 
             $allowedTypes = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
@@ -133,35 +133,52 @@ class User extends Model
         }
     }
 
-    public function getUserByID($id)
+    public function deleteUserById($id)
+    {
+        $user = $this->find($id);
+        if ($user->avatar != URLROOT . '/uploads/default.png') {
+            unlink($user->avatar);
+        }
+        $this->db->query('DELETE FROM users WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
+
+    public function find($id)
     {
         $this->db->query('SELECT * FROM users WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
 
-    public function deleteUserById($id)
-    {
-        $this->db->query('DELETE FROM users WHERE id = :id');
-        $this->db->bind(':id', $id);
-        return $this->db->execute();
-    }
-
     public function updateUser($data)
     {
         $errors = $this->validateUpdate($data);
+        if (!empty($_FILES['avatar']['name']) && $_FILES['avatar']['size'] > 0) {
+            $image_data = $this->prepareImage();
+            $errors = array_merge($errors, $image_data[0]);
+            $data = array_merge($data, $image_data[1]);
+        }
+
         if (count($errors) > 0) {
             return $errors;
         }
         $user = $this->find($data['id']);
-        $this->db->query('UPDATE users SET name = :name, email = :email, pass = :password, avatar = :avatar, role = :role WHERE id = :id');
-        $this->db->bind(':id', $data['id']);
-        $this->db->bind(':name', $data['name'] || $user->name);
-        $this->db->bind(':email', $data['email'] || $user->email);
-        $this->db->bind(':password', $data['password'] ? password_hash($data['password'], PASSWORD_DEFAULT) : $user->password);
-        $this->db->bind(':avatar', $data['avatar'] || $user->avatar);
-        $this->db->bind(':role', $data['role'] || $user->role);
-        return $this->db->execute();
+        $this->db->query('UPDATE users SET name = :name, email = :email, pass = :password, avatar = :avatar WHERE id = :id');
+        $this->db->bind(':id', $user->id);
+        $this->db->bind(':name', in_array('name', array_keys($data)) ? $data['name'] : $user->name);
+        $this->db->bind(':email', in_array('email', array_keys($data)) ? $data['email'] : $user->email);
+        $this->db->bind(':password', in_array('password', array_keys($data)) ? password_hash($data['password'], PASSWORD_DEFAULT) : $user->pass);
+        $this->db->bind(':avatar', in_array('avatar', array_keys($data)) ? $data['avatar'] : $user->avatar);
+
+        $result = $this->db->execute();
+        if ($result) {
+            if ($user->avatar != URLROOT . '/uploads/default.png' && in_array('avatar', array_keys($data))) {
+                unlink($user->avatar);
+            }
+            return true;
+        }
+        return false;
     }
 
     private function validateUpdate($data)
@@ -176,7 +193,7 @@ class User extends Model
             if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = 'Please enter the correct email format';
             } else {
-                if ($this->findUserByEmail($data['email'])) {
+                if ($this->findUserByEmail($data['email']) && $data['email'] != $this->getUserByID($data['id'])->email) {
                     $errors['email'] = 'Email is already taken';
                 }
             }
@@ -198,15 +215,10 @@ class User extends Model
             }
         }
 
-        if (!empty($data['role'])) {
-            if ($data['role'] != 'Admin' && $data['role'] != 'User') {
-                $errors['role'] = 'Role must be admin or user';
-            }
-        }
         return $errors;
     }
 
-    public function find($id)
+    public function getUserByID($id)
     {
         $this->db->query('SELECT * FROM users WHERE id = :id');
         $this->db->bind(':id', $id);

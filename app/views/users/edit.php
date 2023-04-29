@@ -1,8 +1,8 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
 <?php
 $errors = $data['errors'];
-$data = $data['data'];
-var_dump($data);
+$data = (object)$data['data'];
+//var_dump($data);
 ?>
     <section class="content mt-5">
         <?php flash('user_message'); ?>
@@ -13,13 +13,14 @@ var_dump($data);
                         <h3 class="card-title">Add User</h3>
                     </div>
                     <div class="card-body">
-                        <form action="<?php echo URLROOT; ?>/users/create" method="post" enctype="multipart/form-data">
-
+                        <form action="<?php echo URLROOT . "/users/edit/" . $data->id; ?>" method="post"
+                              enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="<?= $data->id ?>">
                             <div class="form-floating mb-3">
                                 <input type="text"
                                        class="form-control <?php echo (!empty($errors['name'])) ? 'is-invalid' : ''; ?>"
                                        id="nameInput" name="name" placeholder="Name"
-                                       value="<?php echo $data['name']; ?>">
+                                       value="<?php echo $data->name; ?>">
                                 <label for="nameInput">Name</label>
                                 <span class="invalid-feedback"><?php echo $errors['name']; ?></span>
                             </div>
@@ -27,15 +28,15 @@ var_dump($data);
                                 <input type="text"
                                        class="form-control <?php echo (!empty($errors['email'])) ? 'is-invalid' : ''; ?>"
                                        id="emailInput" name="email" placeholder="Email"
-                                       value="<?php echo $data['email']; ?>">
+                                       value="<?php echo $data->email; ?>">
                                 <label for="emailInput">Email</label>
                                 <span class="invalid-feedback"><?php echo $errors['email']; ?></span>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="text"
                                        class="form-control <?php echo (!empty($errors['password'])) ? 'is-invalid' : ''; ?>"
-                                       id="passwordInput" name="password" placeholder="Password"
-                                       value="<?php echo $data['password']; ?>">
+                                       id="passwordInput" name="password" placeholder="Password" type="password"
+                                       value="">
                                 <label for="passwordInput">Password</label>
                                 <span class="invalid-feedback"><?php echo $errors['password']; ?></span>
                             </div>
@@ -43,16 +44,18 @@ var_dump($data);
                                 <input type="text"
                                        class="form-control <?php echo (!empty($errors['confirm_password'])) ? 'is-invalid' : ''; ?>"
                                        id="confirm_passwordInput" name="confirm_password" placeholder="Password"
-                                       value="<?php echo $data['confirm_password']; ?>">
+                                       type="password"
+                                       value="">
                                 <label for="confirm_passwordInput">Confirm Password</label>
                                 <span class="invalid-feedback"><?php echo $errors['confirm_password']; ?></span>
                             </div>
 
                             <div class="form-floating mb-3">
+                                <img width="150" src="<?= $data->avatar ?>" alt="<?= $data->name ?>">
                                 <input type="file"
                                        class="form-control <?php echo (!empty($errors['avatar'])) ? 'is-invalid' : ''; ?>"
                                        id="avatarInput" name="avatar" placeholder="Avatar"
-                                       value="<?php echo $data['avatar']; ?>">
+                                       value="">
                                 <label for="avatarInput">Image</label>
                                 <span class="invalid-feedback"><?php echo $errors['avatar']; ?></span>
                             </div>

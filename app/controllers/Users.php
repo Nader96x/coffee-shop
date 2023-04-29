@@ -184,7 +184,52 @@ class Users extends Controller
 
     public function edit($id)
     {
-        $data = $this->userModel->getUserById($id);
+
+        $request_data = $errors = [
+            'name' => '',
+            'email' => '',
+            'password' => '',
+            'confirm_password' => '',
+            'avatar' => '',
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // update request data
+            $request_data = array_merge($request_data, $_POST);
+            $request_data['avatar'] = $_FILES['avatar']['name'];
+            $errs = $this->userModel->updateUser($request_data);
+            if (is_array($errs)) {
+                $errors = array_merge($errors, $errs);
+            } else {
+                if ($errs === true) {
+                    flash('user_message', 'User Edited', 'success');
+                    return redirect('users/index');
+                } else {
+                    flash('user_message', 'Something went wrong', 'danger');
+                }
+            }
+
+
+        }
+        $data = [
+            'errors' => $errors,
+            'data' => $request_data,
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $data = ['errors' => [
+                'name' => '',
+                'email' => '',
+                'password' => '',
+                'confirm_password' => '',
+                'avatar' => '',
+            ],
+                'data' => []
+            ];
+            $data['data'] = $this->userModel->getUserById($id);
+        }
+
+//        die(var_dump($data));
         return $this->view('users/edit', $data);
     }
 

@@ -135,9 +135,20 @@ class User extends Model
 
     public function deleteUserById($id)
     {
+        $user = $this->find($id);
+        if ($user->avatar != URLROOT . '/uploads/default.png') {
+            unlink($user->avatar);
+        }
         $this->db->query('DELETE FROM users WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->execute();
+    }
+
+    public function find($id)
+    {
+        $this->db->query('SELECT * FROM users WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
     }
 
     public function updateUser($data)
@@ -160,7 +171,14 @@ class User extends Model
         $this->db->bind(':password', in_array('password', array_keys($data)) ? password_hash($data['password'], PASSWORD_DEFAULT) : $user->pass);
         $this->db->bind(':avatar', in_array('avatar', array_keys($data)) ? $data['avatar'] : $user->avatar);
 
-        return $this->db->execute();
+        $result = $this->db->execute();
+        if ($result) {
+            if ($user->avatar != URLROOT . '/uploads/default.png' && in_array('avatar', array_keys($data))) {
+                unlink($user->avatar);
+            }
+            return true;
+        }
+        return false;
     }
 
     private function validateUpdate($data)
@@ -201,13 +219,6 @@ class User extends Model
     }
 
     public function getUserByID($id)
-    {
-        $this->db->query('SELECT * FROM users WHERE id = :id');
-        $this->db->bind(':id', $id);
-        return $this->db->single();
-    }
-
-    public function find($id)
     {
         $this->db->query('SELECT * FROM users WHERE id = :id');
         $this->db->bind(':id', $id);

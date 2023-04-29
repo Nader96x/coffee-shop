@@ -87,14 +87,14 @@ class Category extends Model
         $errors = [];
         if (empty($data['name'])) {
             $errors['name'] = 'Please enter a name';
-        }else{
+        } else {
             if (strlen($data['name']) < 3) {
                 $errors['name'] = 'Name must be at least 3 characters';
-            }elseif (strlen($data['name']) > 255) {
+            } elseif (strlen($data['name']) > 255) {
                 $errors['name'] = 'Name must be less than 255 characters';
-            }elseif (!preg_match('/^[a-zA-Z0-9\s]+$/', $data['name'])) {
+            } elseif (!preg_match('/^[a-zA-Z0-9\s]+$/', $data['name'])) {
                 $errors['name'] = 'Name can only contain letters, numbers and spaces';
-            }elseif ($this->categoryExists($data['name'])) {
+            } elseif ($this->categoryExists($data['name'])) {
                 $errors['name'] = 'Name is already taken';
             }
         }
@@ -106,18 +106,17 @@ class Category extends Model
         $errors = [];
         if (empty($data['name'])) {
             $errors['name'] = 'Please enter a name';
-        }else{
+        } else {
             if (strlen($data['name']) < 3) {
                 $errors['name'] = 'Name must be at least 3 characters';
-            }elseif (strlen($data['name']) > 255) {
+            } elseif (strlen($data['name']) > 255) {
                 $errors['name'] = 'Name must be less than 255 characters';
-            }elseif (!preg_match('/^[a-zA-Z0-9\s]+$/', $data['name'])) {
+            } elseif (!preg_match('/^[a-zA-Z0-9\s]+$/', $data['name'])) {
                 $errors['name'] = 'Name can only contain letters, numbers and spaces';
-            }elseif ($this->categoryExists($data['name']) && $data['name'] != $this->getCategoryById($data['id'])->name) {
+            } elseif ($this->categoryExists($data['name']) && $data['name'] != $this->getCategoryById($data['id'])->name) {
                 $errors['name'] = 'Name is already taken';
             }
         }
         return $errors;
     }
-
 }

@@ -16,7 +16,7 @@ class Users extends Controller
     public function cccc()
     {
         $data =  $this->userModel->getUsers();
-        $data = [];
+        // $data = [];
         return $this->view('users/index', $data);
     }
 

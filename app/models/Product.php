@@ -1,4 +1,5 @@
 <?php
+require_once('../app/models/Category.php');
 
 class Product extends Model
 {
@@ -87,21 +88,22 @@ class Product extends Model
         return $this->db->resultSet();
     }
 
-    private function validateCreate($data): array{
+    private function validateCreate($data): array
+    {
         $errors = [];
         if (empty($data['name'])) {
             $errors['name'] = 'Name is required';
-        }else{
+        } else {
             if (strlen($data['name']) < 3) {
                 $errors['name'] = 'Name must be at least 3 characters';
             }
         }
         if (empty($data['price'])) {
             $errors['price'] = 'Price is required';
-        }else{
+        } else {
             if (!is_float($data['price'])) {
                 $errors['price'] = 'Price must be a number';
-            }elseif ($data['price'] < 0){
+            } elseif ($data['price'] < 0) {
                 $errors['price'] = 'Price must be a positive number';
             }
         }
@@ -113,10 +115,10 @@ class Product extends Model
         }
         if (empty($data['cat_id'])) {
             $errors['cat_id'] = 'Category is required';
-        }else{
+        } else {
             if (!is_int($data['cat_id'])) {
                 $errors['cat_id'] = 'Category must be a number';
-            }elseif ($this->category->getCategoryById($data['cat_id']) == null){
+            } elseif ($this->category->getCategoryById($data['cat_id']) == null) {
                 $errors['cat_id'] = 'Category does not exist';
             }
         }
@@ -128,26 +130,26 @@ class Product extends Model
         $errors = [];
         if (empty($data['id'])) {
             $errors['id'] = 'Id is required';
-        }else{
+        } else {
             if (!is_int($data['id'])) {
                 $errors['id'] = 'Id must be a number';
-            }elseif ($this->getProductById($data['id']) == null){
+            } elseif ($this->getProductById($data['id']) == null) {
                 $errors['id'] = 'Product does not exist';
             }
         }
         if (empty($data['name'])) {
             $errors['name'] = 'Name is required';
-        }else{
+        } else {
             if (strlen($data['name']) < 3) {
                 $errors['name'] = 'Name must be at least 3 characters';
             }
         }
         if (empty($data['price'])) {
             $errors['price'] = 'Price is required';
-        }else{
+        } else {
             if (!is_float($data['price'])) {
                 $errors['price'] = 'Price must be a number';
-            }elseif ($data['price'] < 0){
+            } elseif ($data['price'] < 0) {
                 $errors['price'] = 'Price must be a positive number';
             }
         }
@@ -159,10 +161,10 @@ class Product extends Model
         }
         if (empty($data['cat_id'])) {
             $errors['cat_id'] = 'Category is required';
-        }else{
+        } else {
             if (!is_int($data['cat_id'])) {
                 $errors['cat_id'] = 'Category must be a number';
-            }elseif ($this->category->getCategoryById($data['cat_id']) == null){
+            } elseif ($this->category->getCategoryById($data['cat_id']) == null) {
                 $errors['cat_id'] = 'Category does not exist';
             }
         }

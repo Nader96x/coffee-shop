@@ -67,7 +67,8 @@
 <!-- preloader end -->
 
 <!-- header start -->
-<header class="site-header site-header__3 position-absolute">
+<!--<header class="site-header site-header__3 position-absolute">-->
+<header class="site-header site-header__3">
     <div class="menu-area menu-area__3">
         <div class="container-fluid custom-width custom-width__2">
             <div class="row d-none d-xl-flex">
@@ -394,4 +395,4 @@
 </aside>
 <div class="overlay"></div>
 
-<main>
+<main class="container">

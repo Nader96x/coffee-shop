@@ -2,7 +2,7 @@
 <?php
 $errors = $data['errors'];
 $data = (object)$data['data'];
-var_dump($data);
+//var_dump($data);
 ?>
     <section class="content mt-5">
         <?php flash('user_message'); ?>

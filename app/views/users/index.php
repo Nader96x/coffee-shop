@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
-<?php var_dump($data); ?>
+<?php //var_dump($data); ?>
     <section class="content">
         <?php flash('user_message'); ?>
         <div class="card">

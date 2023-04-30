@@ -85,7 +85,8 @@ class Products extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // update request data
             $request_data = array_merge($request_data, $_POST);
-            $request_data['avatar'] = $_FILES['avatar']['name'];
+            if ($_FILES['avatar']['name'])
+                $request_data['avatar'] = $_FILES['avatar']['name'];
             $errs = $this->productModel->updateProduct($request_data);
             if (is_array($errs)) {
                 $errors = array_merge($errors, $errs);

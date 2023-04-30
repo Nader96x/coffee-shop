@@ -15,45 +15,54 @@ $cats = $categories->getCategories();
                     <h3 class="card-title">Add Product</h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?php echo URLROOT; ?>/products/create" method="post" enctype="multipart/form-data">
+                    <form action="<?= URLROOT; ?>/products/create" method="post" enctype="multipart/form-data">
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control <?php echo (!empty($errors['name'])) ? 'is-invalid' : ''; ?>" id="nameInput" name="name" placeholder="Name" value="<?php echo $data['name']; ?>">
+                            <input type="text"
+                                class="form-control <?= (!empty($errors['name'])) ? 'is-invalid' : ''; ?>"
+                                id="nameInput" name="name" placeholder="Name" value="<?= $data['name']; ?>">
                             <label for="nameInput">Name</label>
-                            <span class="invalid-feedback"><?php echo $errors['name']; ?></span>
+                            <span class="invalid-feedback"><?= $errors['name']; ?></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="number" step="0.01" class="form-control <?php echo (!empty($errors['price'])) ? 'is-invalid' : ''; ?>" id="priceInput" name="price" placeholder="price" value="<?php echo $data['price']; ?>">
+                            <input type="number" step="0.01"
+                                class="form-control <?= (!empty($errors['price'])) ? 'is-invalid' : ''; ?>"
+                                id="priceInput" name="price" placeholder="price" value="<?= $data['price']; ?>">
                             <label for="priceInput">Price</label>
-                            <span class="invalid-feedback"><?php echo $errors['price']; ?></span>
+                            <span class="invalid-feedback"><?= $errors['price']; ?></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <select name="status" id="status" class="form-control">
-                                <option value="0" selected>Not Available</option>
-                                <option value="1">Available</option>
+                            <select name="status" id="status"
+                                class="form-control <?php echo (!empty($errors['status'])) ? 'is-invalid' : ''; ?>">
+                                <option value="" disabled selected>Select Status</option>
+                                <option value="0" <?= $data['status'] == 0 ? 'selected' : '' ?>>Comming Soon</option>
+                                <option value="1" <?= $data['status'] == 1 ? 'selected' : '' ?>>Available</option>
                             </select>
                             <label for="statusInput">Status</label>
-                            <span class="invalid-feedback"><?php echo $errors['status']; ?></span>
+                            <span class="invalid-feedback"><?= $errors['status']; ?></span>
                         </div>
                         <div class="form-floating mb-3">
-
-                            <select name="cat_id" id="cat_id" class="form-control">
+                            <select name="cat_id" id="cat_id"
+                                class="form-control <?php echo (!empty($errors['cat_id'])) ? 'is-invalid' : ''; ?>">
                                 <option value="" disabled selected>Select Category</option>
                                 <?php
                                 foreach ($cats as $cat) { ?>
-                                    <option value="<?= $cat->id ?>"><?= $cat->name ?></option>
+                                <option value="<?= $cat->id ?>" <?= $data['cat_id'] == $cat->id ? 'selected' : '' ?>>
+                                    <?= $cat->name ?></option>
                                 <?php
                                 }
                                 ?>
                             </select>
                             <label for="cat_idInput">Category</label>
-                            <span class="invalid-feedback"><?php echo $errors['cat_id']; ?></span>
+                            <span class="invalid-feedback"><?= $errors['cat_id']; ?></span>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="file" class="form-control <?php echo (!empty($errors['avatar'])) ? 'is-invalid' : ''; ?>" id="avatarInput" name="avatar" placeholder="Avatar" value="<?php echo $data['avatar']; ?>">
+                            <input type="file"
+                                class="form-control <?= (!empty($errors['avatar'])) ? 'is-invalid' : ''; ?>"
+                                id="avatarInput" name="avatar" placeholder="Avatar" value="<?= $data['avatar']; ?>">
                             <label for="avatarInput">Image</label>
-                            <span class="invalid-feedback"><?php echo $errors['avatar']; ?></span>
+                            <span class="invalid-feedback"><?= $errors['avatar']; ?></span>
                         </div>
 
 

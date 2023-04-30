@@ -73,7 +73,6 @@ class Product extends Model
         $this->db->bind(':status', in_array('status', array_keys($data)) ? $data['status'] : $product->status);
         $this->db->bind(':cat_id', in_array('cat_id', array_keys($data)) ? $data['cat_id'] : $product->cat_id);
         $this->db->bind(':avatar', in_array('avatar', array_keys($data)) ? $data['avatar'] : $product->avatar);
-
         $result = $this->db->execute();
         if ($result) {
             if ($product->avatar != URLROOT . '/uploads/default.png' && in_array('avatar', array_keys($data))) {
@@ -145,7 +144,7 @@ class Product extends Model
         if (empty($data['id'])) {
             $errors['id'] = 'Id is required';
         } else {
-            if (!is_int($data['id'])) {
+            if (!is_numeric($data['id'])) {
                 $errors['id'] = 'Id must be a number';
             } elseif ($this->getProductById($data['id']) == null) {
                 $errors['id'] = 'Product does not exist';
@@ -166,9 +165,6 @@ class Product extends Model
             } elseif ($data['price'] < 0) {
                 $errors['price'] = 'Price must be a positive number';
             }
-        }
-        if (empty($data['avatar'])) {
-            $errors['avatar'] = 'Image is required';
         }
         if (empty($data['status']) && $data['status'] != 0) {
             $errors['status'] = 'status is required';

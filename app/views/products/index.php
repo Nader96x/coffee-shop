@@ -33,26 +33,28 @@ $category = new Category;
                     <?php
                     $i = 1;
                     foreach ($data as $product) { ?>
-                        <tr>
-                            <th class="align-middle" scope="row"><?= $i++ ?></th>
-                            <td><?= $product->name ?></td>
-                            <td><?= $product->price ?>EGP</td>
-                            <td><img width="50" src="<?= $product->avatar ?>" alt="<?= $product->name ?>"></td>
-                            <td><?= $product->status ? "avaialabe" : 'Not Available' ?></td>
-                            <?php
+                    <tr>
+                        <th class="align-middle" scope="row"><?= $i++ ?></th>
+                        <td><?= $product->name ?></td>
+                        <td><?= $product->price ?>EGP</td>
+                        <td><img width="50" src="<?= $product->avatar ?>" alt="<?= $product->name ?>"></td>
+                        <td><?= $product->status ? "Available" : 'Comming Soon' ?></td>
+                        <?php
                             $cat = $category->find($product->cat_id)
                             ?>
-                            <td><?= $cat->name ?></td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="<?= URLROOT ?>/products/update/<?= $product->id ?>" class="btn btn-success">Update</a>
-                                    <form method="post" action="<?= URLROOT ?>/products/delete" onsubmit="return confirm('Are you sure you want to delete this Product?')">
-                                        <input type="hidden" name="id" value="<?php echo $product->id; ?>">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+                        <td><?= $cat->name ?></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="<?= URLROOT ?>/products/update/<?= $product->id ?>"
+                                    class="btn btn-success">Update</a>
+                                <form method="post" action="<?= URLROOT ?>/products/delete"
+                                    onsubmit="return confirm('Are you sure you want to delete this Product?')">
+                                    <input type="hidden" name="id" value="<?php echo $product->id; ?>">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                     <?php } ?>
                 </tbody>
             </table>

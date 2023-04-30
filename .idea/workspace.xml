@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9ede387-7931-45d9-bb90-a1f2d95ca31c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/8470cfb9-160a-45be-89fd-6cab71b179b5.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/8470cfb9-160a-45be-89fd-6cab71b179b5.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/config.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/Orders.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/Orders.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/Order.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/orders/create.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/orders/create.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/orders/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/orders/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +24,11 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -61,7 +70,7 @@
     &quot;RunOnceActivity.laravel-idea.search-composer-json&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;orders&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/xampp/htdocs/cafe/app/views/users&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -121,6 +130,7 @@
       <workItem from="1682768255441" duration="132000" />
       <workItem from="1682768455345" duration="2806000" />
       <workItem from="1682779660384" duration="15378000" />
+      <workItem from="1682888509276" duration="3312000" />
     </task>
     <servers />
   </component>

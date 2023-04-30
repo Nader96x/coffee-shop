@@ -2,28 +2,23 @@
 
 class Orders extends Controller
 {
-    public $userModel;
+    private $userModel;
+    private $orderModel;
+    private $productModel;
 
     public function __construct()
     {
         $this->userModel = $this->model('User');
+        $this->orderModel = $this->model('Order');
+        $this->productModel = $this->model('Product');
     }
 
     public function index()
     {
         $data = [
-            "products" => [],
-            "user_last_orders" => [],
-            "users" => []
+            "orders" => $this->orderModel->getAllOrdersWithUsers(),
+            'products' => $this->productModel->getProducts(),
         ];
-        $db = new Database();
-        /*$db->query('SELECT * FROM orders WHERE user_id = :user_id ORDER BY id DESC LIMIT 5');
-        $db->bind(':user_id', $_SESSION['user_id']);
-        $data['user_last_orders'] = $db->resultSet();*/
-        $db->query('SELECT * FROM product');
-        $data['products'] = $db->resultSet();
-
-        $data['users'] = $this->userModel->getUsersByRole('User');
 
         return $this->view('orders/index', $data);
     }
@@ -31,19 +26,18 @@ class Orders extends Controller
     public function create()
     {
         $data = [
-            "products" => [],
+            "products" => $this->productModel->getProducts(),
             "user_last_orders" => [],
             "users" => []
         ];
-        $db = new Database();
+        if ($_SESSION && $_SESSION['role'] == 'Admin') {
+            $data['users'] = $this->userModel->getUsersByRole('User');
+        }
         /*$db->query('SELECT * FROM orders WHERE user_id = :user_id ORDER BY id DESC LIMIT 5');
         $db->bind(':user_id', $_SESSION['user_id']);
         $data['user_last_orders'] = $db->resultSet();*/
-        $db->query('SELECT * FROM product');
-        $data['products'] = $db->resultSet();
-        $data['users'] = $this->userModel->getUsersByRole('User');
 
-        return $this->view('orders/index', $data);
+        return $this->view('orders/create', $data);
     }
 
     public function add()

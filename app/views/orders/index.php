@@ -1,225 +1,132 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
 <?php
-$products = $data['products'];
-$user_last_orders = $data['user_last_orders'];
-$users = $data['users'];
+$orders = $data['orders'];
+//var_dump($orders);
+$products_data = $data['products'];
+//var_dump($products_data);
+$products = [];
+foreach ($products_data as $product) {
+
+    $products[$product->id] = $product;
+}
+//var_dump($products);
+
+
+//die();
 ?>
-    <div class="row bg-light p-3">
+    <section class="content">
         <?php flash('user_message');
         //        var_dump($data);
         ?>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <a class="btn btn-primary btn-sm" href="<?= URLROOT ?>/orders/create/">
+                        <i class="fas fa-plus">
+                        </i>
+                        new order
+                    </a>
+                </h3>
 
-        <div class="col-12 col-md-4">
-            <div class="row border border-2 border-success m-2 p-2 h-auto">
-                <div class="row"><h3>Order Details:</h3></div>
-                <div id="orders" class="col-12">
-
-                </div>
-                <div class="col-12">
-                    <h5>Notes:</h5>
-                    <textarea name="notes" style="width: 100%" rows="5"></textarea>
-                </div>
-
-                <div class="col-12">
-                    <label>Room</label>
-                    <select name="room">
-                        <option value="1">Room 1</option>
-                        <option value="2">Room 2</option>
-                        <option value="3">Room 3</option>
-                    </select>
-                </div>
-                <hr class="my-2 ">
-                <div class="col-12 alert alert-primary">
-                    <h4>Total: <span id="total" class="text-success">0</span> L.E</h4>
-                </div>
-                <div class="col-12 my-3">
-                    <button class="btn btn-success w-100" onclick="order(event)">Order</button>
-                </div>
             </div>
+            <div class="card-body p-3">
+                <h1>Orders</h1>
+                <table class="table table-bordered table-light table-striped text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Order Status</th>
+                        <th scope="col">Order Total</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $i = 1;
+                    foreach ($orders
 
+                             as $order) {
+                        ?>
+                        <tr>
+                            <th class="align-middle" scope="row"><?php echo $i++; ?></th>
+                            <td><?php echo $order->id; ?></td>
+                            <td><?php echo $order->user_name; ?></td>
+                            <td><?php echo $order->date; ?></td>
+                            <td><?php echo $order->status; ?></td>
+                            <td><?php echo $order->price; ?></td>
+                            <td>
+                                <form class="d-inline-block"
+                                      action="<?php echo URLROOT; ?>/orders/deliver/<?php echo $order->id; ?>"
+                                      method="post">
+                                    <?php
+                                    //enum('Processing', 'out for delivery', 'done')
+                                    if ($order->status == 'Processing') {
+                                        echo '<input type="submit" value="Deliver" class="btn btn-outline-primary">';
+                                    } elseif ($order->status == 'out for delivery') {
+                                        echo '<input type="submit" value="Mark as Done" class="btn btn-primary">';
+                                    } else {
+                                        echo '<p class="btn btn-success">Delivered</p>';
+                                    }
+                                    ?>
+                                </form>
+                            </td>
+                        <tr class="accordion">
+                            <td colspan="7">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading<?php echo $order->id; ?>">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#collapse<?php echo $order->id; ?>"
+                                                aria-expanded="false"
+                                                aria-controls="collapse<?php echo $order->id; ?>">
+                                            Order #<?php echo $order->id; ?>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse<?php echo $order->id; ?>" class="accordion-collapse collapse"
+                                         aria-labelledby="heading<?php echo $order->id; ?>"
+                                         data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <?php foreach ($order->products as $p) {
 
-        </div>
-        <div class="col-12 col-md-8">
-            <?php if (count($users) > 0) { ?>
-                <h4 class="mt-3">add order to User</h4>
-                <div class="row">
-                    <select name="user_id">
-                        <?php foreach ($users as $user) { ?>
-                            <option value="<?= $user->id ?>"><?= $user->name ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-            <?php } ?>
-            <?php if (count($user_last_orders) > 0) { ?>
-                <h4 class="mt-3">Latest Orders</h4>
-                <div class="row">
-                    <?php foreach ($user_last_orders as $prod) { ?>
-                        <div class="col-6 col-md-3 col-lg-2 my-2 product position-relative">
-                            <img src="https://dummyimage.com/400x400/000/fff&text=<?= $prod->name ?>"
-                                 alt=""
-                                 data-price="<?= $prod->price ?>" data-id="<?= $prod->id ?>"
-                                 data-name="<?= $prod->name ?>"/>
-                            <div
-                                class="position-absolute top-0 end-0 bg-primary rounded-circle d-flex align-items-center justify-content-center"
-                                style="width: 40px; height: 40px;">
-                                <span class="text-white"><?= $prod->price ?>L.E</span>
-                            </div>
-                        </div>
+                                                    $prod = $products[$p->product_id];
+                                                    $prod->quantity = $p->quantity;
+//                                                    var_dump($prod);
+//                                                    die();
+                                                    ?>
+                                                    <div class="col-6 col-md-3 col-lg-2 my-2 product position-relative">
+                                                        <img
+                                                            src="https://dummyimage.com/400x400/000/fff&text=<?= $prod->name ?>"
+                                                            alt=""
+                                                            data-price="<?= $prod->price ?>" data-id="<?= $prod->id ?>"
+                                                            data-name="<?= $prod->name ?>"/>
+                                                        <div
+                                                            class="position-absolute top-0 end-0 bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                            style="width: 40px; height: 40px;">
+                                                            <span class="text-white"><?= $prod->price ?>L.E</span>
+                                                        </div>
+                                                        <div
+                                                            class="text-center"><?= $prod->name . " (" . $prod->quantity . ")" ?></div>
+                                                    </div>
+                                                <?php } ?>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                            </td>
+                        </tr>
                     <?php } ?>
-                </div>
-            <?php } ?>
-            <hr>
-            <h4>All Products</h4>
-            <div class="row">
-                <?php foreach ($products as $prod) { ?>
-                    <div class="col-6 col-md-3 col-lg-2 my-2 product position-relative">
-                        <img src="https://dummyimage.com/400x400/000/fff&text=<?= $prod->name ?>"
-                             alt=""
-                             data-price="<?= $prod->price ?>" data-id="<?= $prod->id ?>"
-                             data-name="<?= $prod->name ?>"/>
-                        <div
-                            class="position-absolute top-0 end-0 bg-primary rounded-circle d-flex align-items-center justify-content-center"
-                            style="width: 40px; height: 40px;">
-                            <span class="text-white"><?= $prod->price ?>L.E</span>
-                        </div>
-                    </div>
-                <?php } ?>
-
+                    </tbody>
+                </table>
 
             </div>
 
+            <div class="card-footer">
+                <h4>total Orders: <?= count($orders) ?></h4>
+            </div>
         </div>
-
-    </div>
-    <script>
-        let products = [];
-
-        function closeButton(products) {
-            document.querySelectorAll(".btn-danger.remove").forEach(el => {
-                el.addEventListener('click', function (event) {
-                    let id = event.target.dataset.id;
-                    let index = products.findIndex(p => p.id === id);
-                    products.splice(index, 1);
-                    drawProducts(products);
-                })
-            });
-        }
-
-        function activeCounters(products) {
-            document.querySelectorAll(".prod-increase").forEach(el => {
-                el.addEventListener('click', function (event) {
-                    // console.log(event.target);
-                    let id = event.target.parentElement.dataset.id;
-                    document.querySelector("img[data-id='" + id + "']").click();
-                    // debugger;
-                })
-            });
-            document.querySelectorAll(".prod-decrease").forEach(el => {
-                el.addEventListener('click', (event) => {
-                    // console.log(event.target.parentElement.dataset.id)
-                    let id = event.target.parentElement.dataset.id;
-                    let index = products.findIndex(p => p.id === id);
-                    if (products[index].qty > 1) {
-                        products[index].qty--;
-                    } else {
-                        products.splice(index, 1);
-                    }
-                    // console.log(products);
-                    drawProducts(products);
-
-                })
-            });
-        }
-
-        function drawProducts(products) {
-            // console.log(products);
-            let orders = document.getElementById('orders');
-            let total = document.getElementById('total');
-            let totalAmount = 0;
-            let html = '';
-
-            products.forEach(p => {
-                html += `<div class="row text-center">
-                            <div class="col-3 text-start">${p.name}</div>
-                            <div class="col-2 px-0 mx-0">${p.qty} x${p.price}</div>
-
-                            <div class="col-2 p-0 " data-id="${p.id}" data-price="${p.price}" data-name="${p.name}" >
-                                <button class="w-25 p-0 text-center btn btn-outline-primary prod-increase">+</button>
-                                <button class="w-25 p-0 text-center btn btn-outline-secondary prod-decrease">-</button>
-                            </div>
-                            <div class="col-3 mx-0 px-0">${p.price * p.qty} L.E</div>
-                            <div class="col-2"><button class="btn btn-danger remove" data-id="${p.id}" >X</button></div>
-
-                            <div class="col-12"><hr></div>
-                        </div>`;
-                totalAmount += p.price * p.qty;
-            });
-            orders.innerHTML = html;
-            total.innerHTML = totalAmount;
-            activeCounters(products);
-            closeButton(products);
-
-        }
-
-        window.addEventListener('load', function () {
-
-            document.querySelectorAll(".product").forEach(el => {
-                el.addEventListener('click', function (event) {
-                    if (event.target.tagName !== 'IMG') {
-                        return;
-                    }
-                    // console.log(event.target.dataset.price);
-                    // console.log(event.target.dataset.name);
-                    // console.log(event.target.dataset.id);
-                    let product = {
-                        id: event.target.dataset.id,
-                        name: event.target.dataset.name,
-                        price: event.target.dataset.price,
-                        qty: 1
-                    };
-                    let index = products.findIndex(p => p.id === product.id);
-                    if (index === -1) {
-                        products.push(product);
-                    } else {
-                        products[index].qty++;
-                    }
-                    // console.log(products);
-                    drawProducts(products);
-
-
-                })
-            });
-        })
-
-        function order(event) {
-            let notes = document.querySelector("textarea[name='notes']").value;
-            let room = document.querySelector("select[name='room']").value;
-            let total = document.querySelector("#total").innerHTML;
-            let data = {
-                notes: notes,
-                room: room,
-                total: total,
-                products: products
-            };
-            console.log(data);
-            fetch('<?= URLROOT ?>/orders/add', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).then(res => res.json())
-                .then(res => {
-                    console.log("lolll!");
-                    console.log(res);
-                    if (res.status === 'success') {
-                        alert('Order Added Successfully');
-                        window.location.href = '<?= URLROOT ?>/orders';
-                    } else {
-                        alert('Error');
-                    }
-                })
-        }
-    </script>
+    </section>
 
 <?php require APPROOT . '/views/inc/footer.php'; ?>

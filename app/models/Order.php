@@ -48,5 +48,15 @@ class Order extends Model
         return $this->db->execute();
     }
 
-
+    public function changeStatus($data)
+    {
+        $this->db->query('UPDATE orders SET status = :status WHERE id = :id');
+        $this->db->bind(':id', $data['id']);
+        $this->db->bind(':status', $data['status']);
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

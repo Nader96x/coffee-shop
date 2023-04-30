@@ -56,4 +56,27 @@ class Orders extends Controller
             die($data);
         }
     }
+
+    public function deliver()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $order = $this->orderModel->find($_POST['id']);
+            if ($order) {
+                $data = ['id' => $_POST['id']];
+                if ($order->status === "Processing") {
+                    $data['status'] = 'out for delivery';
+                } else if ($order->status === "out for delivery") {
+                    $data['status'] = 'done';
+                }
+                $data = $this->orderModel->changeStatus($data);
+                if ($data) {
+                    flash('order_message', "Status Changed Successfuly", 'success');
+                    return redirect('orders');
+                }
+            } else {
+                flash('order_message', 'Order Not Found', 'danger');
+                return redirect('orders');
+            }
+        }
+    }
 }

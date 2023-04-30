@@ -30,6 +30,7 @@ class Orders extends Controller
             "user_last_orders" => [],
             "users" => []
         ];
+        $_SESSION['role'] = 'Admin';
         if ($_SESSION && $_SESSION['role'] == 'Admin') {
             $data['users'] = $this->userModel->getUsersByRole('User');
         }
@@ -43,6 +44,13 @@ class Orders extends Controller
     public function add()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            print_r($_POST);
+            $data = [
+                'user_id' => $_POST['user_id'],
+                'products' => $_POST['products'],
+                'room' => $_POST['room'],
+                'note' => $_POST['note'],
+            ];
             $_POST['status'] = 'success';
             $data = json_encode($_POST);
             die($data);

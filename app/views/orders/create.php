@@ -84,8 +84,6 @@ $users = $data['users'];
                         </div>
                     </div>
                 <?php } ?>
-
-
             </div>
 
         </div>

@@ -16,7 +16,8 @@ class Orders extends Controller
     public function index()
     {
         $data = [
-            "orders" => $this->orderModel->getAllOrdersWithUsers()
+            "orders" => $this->orderModel->getAllOrdersWithUsers(),
+            'products' => $this->productModel->getProducts(),
         ];
 
         return $this->view('orders/index', $data);

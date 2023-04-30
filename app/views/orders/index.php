@@ -1,6 +1,18 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
 <?php
 $orders = $data['orders'];
+//var_dump($orders);
+$products_data = $data['products'];
+//var_dump($products_data);
+$products = [];
+foreach ($products_data as $product) {
+
+    $products[$product->id] = $product;
+}
+//var_dump($products);
+
+
+//die();
 ?>
     <section class="content">
         <?php flash('user_message');
@@ -24,7 +36,7 @@ $orders = $data['orders'];
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Order ID</th>
-                        <th scope="col">User ID</th>
+                        <th scope="col">User Name</th>
                         <th scope="col">Order Date</th>
                         <th scope="col">Order Status</th>
                         <th scope="col">Order Total</th>
@@ -45,14 +57,19 @@ $orders = $data['orders'];
                             <td><?php echo $order->status; ?></td>
                             <td><?php echo $order->price; ?></td>
                             <td>
-                                <a href="<?php echo URLROOT; ?>/orders/show/<?php echo $order->id; ?>"
-                                   class="btn btn-primary">Show</a>
-                                <a href="<?php echo URLROOT; ?>/orders/edit/<?php echo $order->id; ?>"
-                                   class="btn btn-warning">Edit</a>
                                 <form class="d-inline-block"
-                                      action="<?php echo URLROOT; ?>/orders/delete/<?php echo $order->id; ?>"
+                                      action="<?php echo URLROOT; ?>/orders/deliver/<?php echo $order->id; ?>"
                                       method="post">
-                                    <input type="submit" value="Delete" class="btn btn-danger">
+                                    <?php
+                                    //enum('Processing', 'out for delivery', 'done')
+                                    if ($order->status == 'Processing') {
+                                        echo '<input type="submit" value="Deliver" class="btn btn-outline-primary">';
+                                    } elseif ($order->status == 'out for delivery') {
+                                        echo '<input type="submit" value="Mark as Done" class="btn btn-primary">';
+                                    } else {
+                                        echo '<p class="btn btn-success">Delivered</p>';
+                                    }
+                                    ?>
                                 </form>
                             </td>
                         <tr class="accordion">
@@ -71,21 +88,33 @@ $orders = $data['orders'];
                                          aria-labelledby="heading<?php echo $order->id; ?>"
                                          data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            <strong>This is the first item's accordion body.</strong> It is shown by
-                                            default, until the collapse plugin adds the appropriate classes that we use
-                                            to
-                                            style each element. These classes control the overall appearance, as well as
-                                            the
-                                            showing and hiding via CSS transitions. You can modify any of this with
-                                            custom
-                                            CSS or overriding our default variables. It's also worth noting that just
-                                            about
-                                            any HTML can go within the <code>.accordion-body</code>, though the
-                                            transition
-                                            does limit overflow.
+                                            <div class="row">
+                                                <?php foreach ($order->products as $p) {
+
+                                                    $prod = $products[$p->product_id];
+                                                    $prod->quantity = $p->quantity;
+//                                                    var_dump($prod);
+//                                                    die();
+                                                    ?>
+                                                    <div class="col-6 col-md-3 col-lg-2 my-2 product position-relative">
+                                                        <img
+                                                            src="https://dummyimage.com/400x400/000/fff&text=<?= $prod->name ?>"
+                                                            alt=""
+                                                            data-price="<?= $prod->price ?>" data-id="<?= $prod->id ?>"
+                                                            data-name="<?= $prod->name ?>"/>
+                                                        <div
+                                                            class="position-absolute top-0 end-0 bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                            style="width: 40px; height: 40px;">
+                                                            <span class="text-white"><?= $prod->price ?>L.E</span>
+                                                        </div>
+                                                        <div
+                                                            class="text-center"><?= $prod->name . " (" . $prod->quantity . ")" ?></div>
+                                                    </div>
+                                                <?php } ?>
+
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                             </td>
                         </tr>
                     <?php } ?>

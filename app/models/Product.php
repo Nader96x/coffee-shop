@@ -72,7 +72,7 @@ class Product extends Model
         $this->db->bind(':price', in_array('price', array_keys($data)) ? $data['price'] : $product->price);
         $this->db->bind(':status', in_array('status', array_keys($data)) ? $data['status'] : $product->status);
         $this->db->bind(':cat_id', in_array('cat_id', array_keys($data)) ? $data['cat_id'] : $product->cat_id);
-        $this->db->bind(':avatar', in_array('avatar', array_keys($data)) ? $data['avatar'] : $product->avatar);
+        $this->db->bind(':avatar', (in_array('avatar', array_keys($data)) && $data['avatar'] != "") ? $data['avatar'] : $product->avatar);
         $result = $this->db->execute();
         if ($result) {
             if ($product->avatar != URLROOT . '/uploads/default.png' && in_array('avatar', array_keys($data))) {
@@ -86,10 +86,11 @@ class Product extends Model
     public function deleteProduct($id): bool
     {
         $product = $this->getProductById($id);
+        $oldImg = $product->avatar;
         $this->db->query('DELETE FROM product WHERE id = :id');
         $this->db->bind(':id', $id);
         if ($this->db->execute()) {
-            unlink($product->avatar);
+            unlink($oldImg);
             return true;
         } else {
             return false;

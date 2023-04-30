@@ -17,7 +17,7 @@ $users = $data['users'];
                 </div>
                 <div class="col-12">
                     <h5>Notes:</h5>
-                    <textarea name="notes" style="width: 100%" rows="5"></textarea>
+                    <textarea name="note" style="width: 100%" rows="5"></textarea>
                 </div>
 
                 <div class="col-12">
@@ -190,19 +190,21 @@ $users = $data['users'];
         })
 
         function order(event) {
-            let notes = document.querySelector("textarea[name='notes']").value;
+            let notes = document.querySelector("textarea[name='note']").value;
             let room = document.querySelector("select[name='room']").value;
             let total = document.querySelector("#total").innerHTML;
+            let user_id = document.querySelector("select[name='user_id']")?.value;
             let data = {
                 notes: notes,
                 room: room,
                 total: total,
-                products: products
+                products: products,
+                user_id: user_id
             };
             console.log(data);
             fetch('<?= URLROOT ?>/orders/add', {
                 method: 'POST',
-                body: JSON.stringify(data),
+                body: data,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }

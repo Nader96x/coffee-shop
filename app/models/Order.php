@@ -28,6 +28,11 @@ class Order extends Model
         return $orders;
     }
 
+    public function getProductsPrices($array)
+    {
+        $this->db->query('SELECT * FROM product WHERE id IN (' . implode(',', $array) . ')');
+        return $this->db->resultSet();
+    }
 
     public function find($id)
     {

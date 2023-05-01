@@ -113,6 +113,7 @@ foreach ($products_data as $product) {
                                 </div>
                         </td>
                     </tr>
+                    </tr>
                     <?php } ?>
                 </tbody>
             </table>

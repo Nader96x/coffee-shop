@@ -232,5 +232,24 @@ class User extends Model
         return $this->db->resultSet();
     }
 
+    public function getUserLastOrdersItems($id, $limit = 5)
+    {
+        $this->db->query('SELECT id FROM orders WHERE user_id = :id ORDER BY date DESC LIMIT :limit');
+        $this->db->bind(':id', $id);
+        $this->db->bind(':limit', $limit);
+        $orders = $this->db->resultSet();
+        $items = [];
+        foreach ($orders as $order) {
+            $this->db->query('SELECT product_id FROM orders_product WHERE order_id = :id');
+            $this->db->bind(':id', $order->id);
+            $items = array_merge($items, $this->db->resultSet());
+        }
+        $items = array_map(function ($item) {
+            return $item->product_id;
+        }, $items);
+        $this->db->query('SELECT * FROM product WHERE id IN (' . implode(',', $items) . ')');
+        $products = $this->db->resultSet();
+        return $products;
+    }
 
 }

@@ -30,9 +30,12 @@ class Orders extends Controller
             "user_last_orders" => [],
             "users" => []
         ];
-        $_SESSION['role'] = 'Admin';
-        if ($_SESSION && $_SESSION['role'] == 'Admin') {
+        $_SESSION['user_role'] = 'Admin';
+        if ($_SESSION && $_SESSION['user_role'] == 'Admin') {
             $data['users'] = $this->userModel->getUsersByRole('User');
+//        } elseif ($_SESSION && $_SESSION['user_role'] == 'User') {
+        } elseif ($_SESSION && $_SESSION['user_role'] == 'User') {
+            $data['user_last_orders'] = $this->userModel->getUserLastOrdersItems(33);
         }
         /*$db->query('SELECT * FROM orders WHERE user_id = :user_id ORDER BY id DESC LIMIT 5');
         $db->bind(':user_id', $_SESSION['user_id']);

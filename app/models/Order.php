@@ -28,6 +28,18 @@ class Order extends Model
         return $orders;
     }
 
+    public function changeStatus($data)
+    {
+        $this->db->query('UPDATE orders SET status = :status WHERE id = :id');
+        $this->db->bind(':id', $data['id']);
+        $this->db->bind(':status', $data['status']);
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getProductsPrices($array)
     {
         $this->db->query('SELECT * FROM product WHERE id IN (' . implode(',', $array) . ')');

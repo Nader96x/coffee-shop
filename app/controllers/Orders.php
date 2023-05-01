@@ -84,7 +84,7 @@ class Orders extends Controller
             }
             $data->id = $this->orderModel->addOrder($data);
             $data->status = 'success';
-            flash('user_message', "Order #{$data->id} Created with Total invoice {$data->price}L.E", 'success');
+            flash('order_message', "Order #{$data->id} Created with Total invoice {$data->price}L.E", 'success');
             $data = json_encode($data);
             die($data);
         }

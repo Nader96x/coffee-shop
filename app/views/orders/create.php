@@ -190,6 +190,7 @@ $users = $data['users'];
         })
 
         function order(event) {
+            event.target.disabled = true;
             let notes = document.querySelector("textarea[name='note']").value;
             let room = document.querySelector("select[name='room']").value;
             let total = document.querySelector("#total").innerHTML;

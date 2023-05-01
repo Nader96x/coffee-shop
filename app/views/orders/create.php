@@ -117,8 +117,8 @@ $users = $data['users'];
                     // console.log(event.target.parentElement.dataset.id)
                     let id = event.target.parentElement.dataset.id;
                     let index = products.findIndex(p => p.id === id);
-                    if (products[index].qty > 1) {
-                        products[index].qty--;
+                    if (products[index].quantity > 1) {
+                        products[index].quantity--;
                     } else {
                         products.splice(index, 1);
                     }
@@ -139,18 +139,18 @@ $users = $data['users'];
             products.forEach(p => {
                 html += `<div class="row text-center">
                             <div class="col-3 text-start">${p.name}</div>
-                            <div class="col-2 px-0 mx-0">${p.qty} x${p.price}</div>
+                            <div class="col-2 px-0 mx-0">${p.quantity} x${p.price}</div>
 
                             <div class="col-2 p-0 " data-id="${p.id}" data-price="${p.price}" data-name="${p.name}" >
                                 <button class="w-25 p-0 text-center btn btn-outline-primary prod-increase">+</button>
                                 <button class="w-25 p-0 text-center btn btn-outline-secondary prod-decrease">-</button>
                             </div>
-                            <div class="col-3 mx-0 px-0">${p.price * p.qty} L.E</div>
+                            <div class="col-3 mx-0 px-0">${p.price * p.quantity} L.E</div>
                             <div class="col-2"><button class="btn btn-danger remove" data-id="${p.id}" >X</button></div>
 
                             <div class="col-12"><hr></div>
                         </div>`;
-                totalAmount += p.price * p.qty;
+                totalAmount += p.price * p.quantity;
             });
             orders.innerHTML = html;
             total.innerHTML = totalAmount;
@@ -173,13 +173,13 @@ $users = $data['users'];
                         id: event.target.dataset.id,
                         name: event.target.dataset.name,
                         price: event.target.dataset.price,
-                        qty: 1
+                        quantity: 1
                     };
                     let index = products.findIndex(p => p.id === product.id);
                     if (index === -1) {
                         products.push(product);
                     } else {
-                        products[index].qty++;
+                        products[index].quantity++;
                     }
                     // console.log(products);
                     drawProducts(products);
@@ -195,19 +195,26 @@ $users = $data['users'];
             let total = document.querySelector("#total").innerHTML;
             let user_id = document.querySelector("select[name='user_id']")?.value;
             let data = {
-                notes: notes,
+                note: notes,
                 room: room,
                 total: total,
+                user_id: user_id,
                 products: products,
-                user_id: user_id
+
             };
             console.log(data);
-            fetch('<?= URLROOT ?>/orders/add', {
+            const headers = new Headers({
+                'Content-Type': 'application/x-www-form-urlencoded;charset=ISO-8859-1'
+            });
+            fetch('<?= URLROOT ?>/orders/add?' + new URLSearchParams({data: JSON.stringify(data)}).toString(), {
                 method: 'POST',
-                body: data,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                body: JSON.stringify({data: data}),
+                headers: headers
+                /*{
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X_DATA': JSON.stringify({data: data})
+                        // 'Content-Type': 'application/json'
+                    }*/
             }).then(res => res.json())
                 .then(res => {
                     console.log("lolll!");

@@ -10,7 +10,7 @@ class Order extends Model
 
     public function getAllOrdersWithUsers()
     {
-        $this->db->query('SELECT orders.*, users.name as user_name FROM orders INNER JOIN users ON orders.user_id = users.id');
+        $this->db->query('SELECT orders.*, users.name as user_name FROM orders INNER JOIN users ON orders.user_id = users.id ORDER BY orders.id DESC');
         $orders = $this->db->resultSet();
         $orders_ids = array_map(function ($order) {
             return $order->id;
@@ -48,15 +48,23 @@ class Order extends Model
         return $this->db->execute();
     }
 
-    public function changeStatus($data)
+    public function addOrder($data)
     {
-        $this->db->query('UPDATE orders SET status = :status WHERE id = :id');
-        $this->db->bind(':id', $data['id']);
-        $this->db->bind(':status', $data['status']);
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            return false;
+        $this->db->query('INSERT INTO orders (user_id, price, note) VALUES (:user_id, :total_price, :note)');
+        $this->db->bind(':user_id', $data->user_id);
+        $this->db->bind(':total_price', $data->price);
+        $this->db->bind(':note', $data->note);
+        $this->db->execute();
+        $order_id = $this->db->lastInsertId();
+        $this->db->query('INSERT INTO orders_product (order_id, product_id, quantity,price) VALUES (:order_id, :product_id, :quantity, :price)');
+        foreach ($data->products as $product) {
+            $this->db->bind(':order_id', $order_id);
+            $this->db->bind(':product_id', $product->id);
+            $this->db->bind(':quantity', $product->quantity);
+            $this->db->bind(':price', $product->price);
+            $this->db->execute();
         }
+        return $order_id;
     }
+
 }

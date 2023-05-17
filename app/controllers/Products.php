@@ -3,18 +3,19 @@
 class Products extends Controller
 {
     public $productModel;
+
     public function __construct()
     {
-        //        if(isLoggedIn())
-        //        {
-        //            redirect('home');
-        //        }
+//        die("Products controller");
+//        if (!isLoggedIn() || !isAdmin()) {
+//            redirect('/users/login');
+//        }
         $this->productModel = $this->model('Product');
     }
 
     public function index()
     {
-        $data =  $this->productModel->getProducts();
+        $data = $this->productModel->getProducts();
         return $this->view('products/index', $data);
     }
 
@@ -58,7 +59,7 @@ class Products extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $product = $this->productModel->find($_POST['id']);
             if ($product) {
-                $data =  $this->productModel->deleteProduct($_POST['id']);
+                $data = $this->productModel->deleteProduct($_POST['id']);
                 if ($data) {
                     flash('product_message', 'Product Deleted', 'success');
                 } else {

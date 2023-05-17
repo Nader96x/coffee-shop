@@ -6,16 +6,15 @@ class Categories extends Controller
 
     public function __construct()
     {
-        //        if(isLoggedIn())
-        //        {
-        //            redirect('home');
-        //        }
+        if (!isLoggedIn() || !isAdmin()) {
+            redirect('/users/login');
+        }
         $this->categoryModel = $this->model('Category');
     }
 
     public function index()
     {
-        $data =  $this->categoryModel->getCategories();
+        $data = $this->categoryModel->getCategories();
         return $this->view('categories/index', $data);
     }
 
@@ -55,7 +54,7 @@ class Categories extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $category = $this->categoryModel->find($_POST['id']);
             if ($category) {
-                $data =  $this->categoryModel->deleteCategory($_POST['id']);
+                $data = $this->categoryModel->deleteCategory($_POST['id']);
                 if ($data) {
                     flash('category_message', 'Category Deleted', 'success');
                 } else {

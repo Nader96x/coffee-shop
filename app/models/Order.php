@@ -10,17 +10,23 @@ class Order extends Model
 
     public function getAllOrdersWithUsers($start, $end)
     {
+
         $this->db->query('SELECT orders.*, users.name as user_name FROM orders INNER JOIN users ON orders.user_id = users.id WHERE orders.date BETWEEN :start AND :end ORDER BY orders.id DESC');
         $this->db->bind(':start', $start);
         $this->db->bind(':end', $end);
+
         $orders = $this->db->resultSet();
+//        var_dump($orders);
         $orders_ids = array_map(function ($order) {
             return $order->id;
         }, $orders);
+        $orders_ids = array_filter($orders_ids);
         if (empty($orders_ids)) {
             return [];
         }
-        $this->db->query('SELECT * FROM orders_product where order_id IN ( ' . implode(',', $orders_ids) . ' )');
+        $sql = 'SELECT * FROM orders_product where order_id IN ( ' . implode(',', $orders_ids) . ' )';
+//        echo '<br>' . $sql . '<br>';
+        $this->db->query($sql);
         $orders_products = $this->db->resultSet();
         foreach ($orders as $order) {
             $order->products = array_filter($orders_products, function ($order_product) use ($order) {

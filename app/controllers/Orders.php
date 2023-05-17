@@ -33,11 +33,10 @@ class Orders extends Controller
             "user_last_orders" => [],
             "users" => []
         ];
-        $_SESSION['user_role'] = 'Admin';
-        if ($_SESSION && $_SESSION['user_role'] == 'Admin') {
+        if (isAdmin()) {
             $data['users'] = $this->userModel->getUsersByRole('User');
 //        } elseif ($_SESSION && $_SESSION['user_role'] == 'User') {
-        } elseif ($_SESSION && $_SESSION['user_role'] == 'User') {
+        } elseif (isUser()) {
             $data['user_last_orders'] = $this->userModel->getUserLastOrdersItems(33);
         }
         /*$db->query('SELECT * FROM orders WHERE user_id = :user_id ORDER BY id DESC LIMIT 5');
@@ -82,7 +81,9 @@ class Orders extends Controller
 
                 $products[$product->id] = $product;
             }
-
+            if (isUser()) {
+                $data->user_id = $_SESSION['user_id'];
+            }
             $data->price = 0;
             foreach ($data->products as $key => $product) {
                 $data->products[$key]->price = $product->price = $products[$product->id]->price;
@@ -132,7 +133,7 @@ class Orders extends Controller
             if ($order) {
                 $data = ['id' => $_POST['id']];
                 if ($order->status === "Processing") {
-                    $data['status'] = 'canceled';
+                    $data['status'] = 'Canceled';
                     $data = $this->orderModel->changeStatus($data);
                     if ($data) {
                         flash('order_message', "Status Canceled Successfuly", 'success');

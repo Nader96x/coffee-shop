@@ -17,8 +17,9 @@ class Checks extends Controller
     public function index()
     {
 
-        $startDate = 0;
-        $endDate = time();
+        $startDate = $_GET['startDate'] ?? date('Y-m-d', strtotime('-1 year'));
+        $endDate = $_GET['endDate'] ?? date('Y-m-d', time());
+
         $data = [
             "orders" => $this->orderModel->getAllOrdersWithUsers($startDate, $endDate),
             'products' => $this->productModel->getProducts(),

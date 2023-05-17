@@ -16,10 +16,14 @@ class Checks extends Controller
 
     public function index()
     {
+
+        $startDate = 0;
+        $endDate = time();
         $data = [
-            "orders" => $this->orderModel->getAllOrdersWithUsers(),
+            "orders" => $this->orderModel->getAllOrdersWithUsers($startDate, $endDate),
             'products' => $this->productModel->getProducts(),
         ];
+
 
         return $this->view('checks/index', $data);
     }

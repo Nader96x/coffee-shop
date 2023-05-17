@@ -8,12 +8,15 @@ class Order extends Model
         return $this->db->resultSet();
     }
 
-    public function getAllOrdersWithUsers()
+    public function getAllOrdersWithUsers($start = 0, $end = 0)
     {
+
         $this->db->query('SELECT orders.*, users.name as user_name FROM orders INNER JOIN users ON orders.user_id = users.id ORDER BY orders.id DESC');
         $orders = $this->db->resultSet();
-        $orders_ids = array_map(function ($order) {
+        $orders_ids = array_map(function ($order) use ($start, $end) {
+//            if ($order->date >= $start && $order->date <= $end) {
             return $order->id;
+//            }
         }, $orders);
 
         $this->db->query('SELECT * FROM orders_product where order_id IN ( ' . implode(',', $orders_ids) . ' )');

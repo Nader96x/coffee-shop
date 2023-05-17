@@ -118,7 +118,9 @@
                                                 <li><a href="<?php echo URLROOT; ?>/users/logout">Logout</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="<?php echo URLROOT; ?>/users">Users</a></li>
+                                        <?php if (IsAdmin()): ?>
+                                            <li><a href="<?php echo URLROOT; ?>/users">Users</a></li>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <li><a href="<?php echo URLROOT; ?>/users/login">Login</a></li>
                                     <?php endif; ?>

@@ -14,12 +14,19 @@ class Orders extends Controller
         $this->userModel = $this->model('User');
         $this->orderModel = $this->model('Order');
         $this->productModel = $this->model('Product');
+
     }
 
     public function index()
     {
+        $startDate = $_GET['startDate'] ?? date('Y-m-d', 0);
+        $endDate = $_GET['endDate'] ?? date('Y-m-d', time());
+        if (empty(trim($endDate))) {
+            $endDate = date('Y-m-d', time());
+        }
+        
         $data = [
-            "orders" => $this->orderModel->getAllOrdersWithUsers(),
+            "orders" => $this->orderModel->getAllOrdersWithUsers($startDate, $endDate),
             'products' => $this->productModel->getProducts(),
         ];
 

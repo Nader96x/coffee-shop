@@ -18,6 +18,29 @@ foreach ($products_data as $product) {
         <?php flash('order_message');
         //        var_dump($data);
         ?>
+        <form action="" method="get">
+            <!-- checks -->
+            <div class="row g-4 m-2">
+                <div class="col-5 ">
+                    <label for="startDate">Date From</label>
+                    <input id="startDate" name="startDate" class="form-control" type="date" value="<?php
+                    echo isset($_GET['startDate']) ? $_GET['startDate'] : '';
+                    ?>"/>
+                </div>
+                <div class="col-5">
+                    <label for="EndDate">Date To</label>
+                    <input id="EndDate" name="endDate" class="form-control" type="date" value="<?php
+                    echo isset($_GET['endDate']) ? $_GET['endDate'] : '';
+                    ?>"/>
+                </div>
+            </div>
+
+            <div class="row g-4 m-2">
+                <div class="col ">
+                    <button class="btn btn-lg btn-primary" type="submit">submit</button>
+                </div>
+            </div>
+        </form>
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">

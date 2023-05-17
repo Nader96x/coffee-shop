@@ -6,20 +6,16 @@ class Users extends Controller
 
     public function __construct()
     {
-        //        if(isLoggedIn())
-        //        {
-        //            redirect('home');
-        //        }
         $this->userModel = $this->model('User');
     }
 
-    public function cccc()
+    /*public function cccc()
     {
         $data = $this->userModel->getUsers();
         return $this->view('users/index', $data);
-    }
+    }*/
 
-    public function register()
+    /*public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
@@ -83,10 +79,13 @@ class Users extends Controller
 
             $this->view('users/register', $data);
         }
-    }
+    }*/
 
     public function login()
     {
+        if (isLoggedIn()) {
+            redirect('orders');
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $data = [
@@ -137,6 +136,9 @@ class Users extends Controller
 
     public function index()
     {
+        if (!isLoggedIn() || !isAdmin()) {
+            redirect('users/login');
+        }
         $data = $this->userModel->getUsersByRole("User");
         return $this->view('users/index', $data);
     }
@@ -149,6 +151,9 @@ class Users extends Controller
 
     public function create()
     {
+        if (!isLoggedIn() || !isAdmin()) {
+            redirect('users/login');
+        }
         $request_data = $errors = [
             'name' => '',
             'email' => '',
@@ -184,7 +189,9 @@ class Users extends Controller
 
     public function edit($id)
     {
-
+        if (!isLoggedIn() || !isAdmin()) {
+            redirect('users/login');
+        }
         $request_data = $errors = [
             'name' => '',
             'email' => '',
@@ -236,6 +243,9 @@ class Users extends Controller
 
     public function delete($id)
     {
+        if (!isLoggedIn() || !isAdmin()) {
+            redirect('users/login');
+        }
         $data = $this->userModel->deleteUserById($id);
         flash('user_message', 'User deleted', 'success');
         header("Location: " . URLROOT . "/users/index");

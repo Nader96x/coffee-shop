@@ -7,6 +7,9 @@ class Checks extends Controller
 
     public function __construct()
     {
+        if (!isLoggedIn()) {
+            redirect('/users/login');
+        }
         $this->orderModel = $this->model('Order');
         $this->productModel = $this->model('Product');
     }

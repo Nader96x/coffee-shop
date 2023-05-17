@@ -8,6 +8,9 @@ class Orders extends Controller
 
     public function __construct()
     {
+        if (!isLoggedIn()) {
+            redirect('/users/login');
+        }
         $this->userModel = $this->model('User');
         $this->orderModel = $this->model('Order');
         $this->productModel = $this->model('Product');
@@ -95,6 +98,9 @@ class Orders extends Controller
 
     public function deliver()
     {
+        if (!isAdmin()) {
+            return redirect('orders');
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $order = $this->orderModel->find($_POST['id']);
             if ($order) {
@@ -107,6 +113,33 @@ class Orders extends Controller
                 $data = $this->orderModel->changeStatus($data);
                 if ($data) {
                     flash('order_message', "Status Changed Successfuly", 'success');
+                    return redirect('orders');
+                }
+            } else {
+                flash('order_message', 'Order Not Found', 'danger');
+                return redirect('orders');
+            }
+        }
+    }
+
+    public function cancel()
+    {
+        if (!isUser()) {
+            return redirect('orders');
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $order = $this->orderModel->find($_POST['id']);
+            if ($order) {
+                $data = ['id' => $_POST['id']];
+                if ($order->status === "Processing") {
+                    $data['status'] = 'canceled';
+                    $data = $this->orderModel->changeStatus($data);
+                    if ($data) {
+                        flash('order_message', "Status Canceled Successfuly", 'success');
+                        return redirect('orders');
+                    }
+                } else {
+                    flash('order_message', 'Can\'t cancel this order', 'danger');
                     return redirect('orders');
                 }
             } else {

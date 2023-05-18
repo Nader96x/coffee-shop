@@ -15,9 +15,7 @@ foreach ($products_data as $product) {
 // die();
 ?>
     <section class="content">
-        <?php flash('order_message');
-        //        var_dump($data);
-        ?>
+        <?php flash('order_message'); ?>
         <form action="" method="get">
             <!-- checks -->
             <div class="row g-4 m-2">

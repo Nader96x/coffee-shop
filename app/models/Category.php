@@ -21,6 +21,7 @@ class Category extends Model
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
+
     public function addCategory($data)
     {
         $errors = $this->validateCreate($data);

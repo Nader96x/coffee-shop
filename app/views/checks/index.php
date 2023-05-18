@@ -1,8 +1,6 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
 
 <?php
-//var_dump($data['orders']);
-//die();
 $orders = $data['orders'];
 $products_data = $data['products'];
 

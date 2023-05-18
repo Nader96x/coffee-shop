@@ -16,7 +16,6 @@ class Order extends Model
         $this->db->bind(':end', $end);
 
         $orders = $this->db->resultSet();
-//        var_dump($orders);
         $orders_ids = array_map(function ($order) {
             return $order->id;
         }, $orders);
@@ -25,7 +24,6 @@ class Order extends Model
             return [];
         }
         $sql = 'SELECT * FROM orders_product where order_id IN ( ' . implode(',', $orders_ids) . ' )';
-//        echo '<br>' . $sql . '<br>';
         $this->db->query($sql);
         $orders_products = $this->db->resultSet();
         foreach ($orders as $order) {

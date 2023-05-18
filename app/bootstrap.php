@@ -5,7 +5,6 @@ require_once 'config/config.php';
 require_once 'helpers/urlHelper.php';
 require_once 'helpers/sessionHelper.php';
 require_once 'helpers/authorization.php';
-require_once 'helpers/prepareRequest.php';
 
 
 spl_autoload_register(function($className){

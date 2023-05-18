@@ -6,10 +6,6 @@ class Products extends Controller
 
     public function __construct()
     {
-//        die("Products controller");
-//        if (!isLoggedIn() || !isAdmin()) {
-//            redirect('/users/login');
-//        }
         $this->productModel = $this->model('Product');
     }
 

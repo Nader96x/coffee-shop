@@ -9,13 +9,18 @@
                 <form action="<?php echo URLROOT; ?>/users/login" method="post">
 
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" id="emailInput" name="email" placeholder="Email" value="<?php echo $data['email']; ?>">
+                        <input type="email"
+                               class="form-control <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>"
+                               id="emailInput" name="email" placeholder="Email" value="<?php echo $data['email']; ?>">
                         <label for="emailInput">Email</label>
                         <span class="invalid-feedback"><?php echo $data['email_err']; ?></span>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control <?php echo (!empty($data['password_err'])) ? 'is-invalid' : ''; ?>" id="passwordInput" name="password" placeholder="Password" value="<?php echo $data['password']; ?>">
+                        <input type="password"
+                               class="form-control <?php echo (!empty($data['password_err'])) ? 'is-invalid' : ''; ?>"
+                               id="passwordInput" name="password" placeholder="Password"
+                               value="<?php echo $data['password']; ?>">
                         <label for="passwordInput">Password</label>
                         <span class="invalid-feedback"><?php echo $data['password_err']; ?></span>
                     </div>
@@ -24,9 +29,10 @@
                         <div class="col">
                             <input type="submit" value="login" class="btn btn-success btn-block">
                         </div>
-                        <div class="col">
-                            <a href="<?php echo URLROOT; ?>/users/login" class="btn btn-light btn-block">Have an account? Register</a>
-                        </div>
+                        <!--<div class="col">
+                            <a href="<?php /*echo URLROOT; */ ?>/users/register" class="btn btn-light btn-block">Have an
+                                account? Register</a>
+                        </div>-->
                     </div>
 
                 </form>

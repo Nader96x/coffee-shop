@@ -2,11 +2,12 @@
 
 session_start();
 
-function flash($name, $message = '', $type = 'success'){
-    if(!empty($message)){
+function flash($name, $message = '', $type = 'success')
+{
+    if (!empty($message)) {
         $_SESSION[$name] = $message;
         $_SESSION[$name . '_class'] = $type;
-    } elseif(!empty($_SESSION[$name])){
+    } elseif (!empty($_SESSION[$name])) {
         $class = !empty($_SESSION[$name . '_class']) ? $_SESSION[$name . '_class'] : '';
         echo '<div class="alert alert-' . $class . '">' . $_SESSION[$name] . '</div>';
         unset($_SESSION[$name]);
@@ -14,23 +15,26 @@ function flash($name, $message = '', $type = 'success'){
     }
 }
 
-function createUserSession($user){
+function createUserSession($user)
+{
     $_SESSION['user_id'] = $user->id;
     $_SESSION['user_email'] = $user->email;
     $_SESSION['user_name'] = $user->name;
     $_SESSION['user_role'] = $user->role;
-    redirect('posts');
+    redirect('orders');
 }
 
-function isLoggedIn(){
-    if(isset($_SESSION['user_id'])){
+function isLoggedIn()
+{
+    if (isset($_SESSION['user_id'])) {
         return true;
     } else {
         return false;
     }
 }
 
-function logoutSession(){
+function logoutSession()
+{
     unset($_SESSION['user_id']);
     unset($_SESSION['user_email']);
     unset($_SESSION['user_name']);
